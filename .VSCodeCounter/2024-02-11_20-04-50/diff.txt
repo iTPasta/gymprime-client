@@ -1,0 +1,93 @@
+Date : 2024-02-11 20:04:50
+Directory : /home/kilian/gymprime-project/gymprime
+Total : 48 files,  1233 codes, 9 comments, 225 blanks, all 1467 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Dart     |         47 |      1,231 |          9 |        225 |      1,465 |
+| YAML     |          1 |          2 |          0 |          0 |          2 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                    | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                       |         48 |      1,233 |          9 |        225 |      1,467 |
+| . (Files)                                                                                                               |          1 |          2 |          0 |          0 |          2 |
+| lib                                                                                                                     |         47 |      1,231 |          9 |        225 |      1,465 |
+| lib (Files)                                                                                                             |          2 |          9 |          3 |          5 |         17 |
+| lib/core                                                                                                                |          4 |          1 |          1 |          0 |          2 |
+| lib/core/constants                                                                                                      |          1 |          2 |          1 |          1 |          4 |
+| lib/core/extensions                                                                                                     |          1 |          6 |          0 |          2 |          8 |
+| lib/core/resources                                                                                                      |          2 |         -7 |          0 |         -3 |        -10 |
+| lib/features                                                                                                            |         41 |      1,221 |          5 |        220 |      1,446 |
+| lib/features/shared                                                                                                     |         41 |      1,221 |          5 |        220 |      1,446 |
+| lib/features/shared/data                                                                                                |         30 |      1,105 |          5 |        214 |      1,324 |
+| lib/features/shared/data/datasources                                                                                    |         18 |      1,031 |          5 |        205 |      1,241 |
+| lib/features/shared/data/datasources/local                                                                              |         17 |      1,009 |          0 |        200 |      1,209 |
+| lib/features/shared/data/datasources/local (Files)                                                                      |          6 |        165 |          0 |         40 |        205 |
+| lib/features/shared/data/datasources/local/database                                                                     |         11 |        844 |          0 |        160 |      1,004 |
+| lib/features/shared/data/datasources/remote                                                                             |          1 |         22 |          5 |          5 |         32 |
+| lib/features/shared/data/models                                                                                         |         10 |         75 |          0 |          9 |         84 |
+| lib/features/shared/data/repositories                                                                                   |          2 |         -1 |          0 |          0 |         -1 |
+| lib/features/shared/domain                                                                                              |         11 |        116 |          0 |          6 |        122 |
+| lib/features/shared/domain/entities                                                                                     |         10 |        117 |          0 |          6 |        123 |
+| lib/features/shared/domain/usecases                                                                                     |          1 |         -1 |          0 |          0 |         -1 |
++-------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                                | language | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /home/kilian/gymprime-project/gymprime/lib/core/constants/constants.dart                                                | Dart     |          2 |          1 |          1 |          4 |
+| /home/kilian/gymprime-project/gymprime/lib/core/extensions/objectid_extension.dart                                      | Dart     |          6 |          0 |          2 |          8 |
+| /home/kilian/gymprime-project/gymprime/lib/core/resources/myobjectid.dart                                               | Dart     |         -6 |          0 |         -2 |         -8 |
+| /home/kilian/gymprime-project/gymprime/lib/core/resources/object_entity.dart                                            | Dart     |         -1 |          0 |         -1 |         -2 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/aliment_local_datasource.dart         | Dart     |         42 |          0 |         11 |         53 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/cached_request_datasource.dart        | Dart     |         -8 |          0 |         -2 |        -10 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/cached_request_local_datasource.dart  | Dart     |         32 |          0 |          9 |         41 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/database/aliment_local_db.dart        | Dart     |         83 |          0 |         15 |         98 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/database/cached_request_local_db.dart | Dart     |         77 |          0 |         15 |         92 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/database/diet_local_db.dart           | Dart     |         73 |          0 |         15 |         88 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/database/exercise_local_db.dart       | Dart     |         76 |          0 |         15 |         91 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/database/local_database.dart          | Dart     |         83 |          0 |         10 |         93 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/database/meal_local_db.dart           | Dart     |         74 |          0 |         15 |         89 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/database/muscle_group_local_db.dart   | Dart     |         75 |          0 |         15 |         90 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/database/muscle_local_db.dart         | Dart     |         76 |          0 |         15 |         91 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/database/program_local_db.dart        | Dart     |         77 |          0 |         15 |         92 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/database/recipe_local_db.dart         | Dart     |         75 |          0 |         15 |         90 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/database/training_local_db.dart       | Dart     |         75 |          0 |         15 |         90 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/diet_local_datasource.dart            | Dart     |         27 |          0 |          6 |         33 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/exercise_local_datasource.dart        | Dart     |         36 |          0 |          8 |         44 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/local/meal_local_datasource.dart            | Dart     |         36 |          0 |          8 |         44 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/remote/diet_remote_datasource.dart          | Dart     |         22 |          5 |          5 |         32 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/models/aliment_model.dart                               | Dart     |         15 |          0 |          1 |         16 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/models/cache_request_model.dart                         | Dart     |          2 |          0 |          0 |          2 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/models/diet_model.dart                                  | Dart     |          6 |          0 |          1 |          7 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/models/exercise_model.dart                              | Dart     |          8 |          0 |          1 |          9 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/models/meal_model.dart                                  | Dart     |          7 |          0 |          1 |          8 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/models/muscle_group_model.dart                          | Dart     |          6 |          0 |          1 |          7 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/models/muscle_model.dart                                | Dart     |          9 |          0 |          1 |         10 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/models/program_model.dart                               | Dart     |         10 |          0 |          1 |         11 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/models/recipe_model.dart                                | Dart     |          6 |          0 |          1 |          7 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/models/training_model.dart                              | Dart     |          6 |          0 |          1 |          7 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/repositories/cached_request_repo_impl.dart              | Dart     |         -2 |          0 |          0 |         -2 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/data/repositories/diet_repository_impl.dart                  | Dart     |          1 |          0 |          0 |          1 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/domain/entities/aliment.dart                                 | Dart     |         20 |          0 |          0 |         20 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/domain/entities/cached_request.dart                          | Dart     |          6 |          0 |          0 |          6 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/domain/entities/diet.dart                                    | Dart     |         11 |          0 |          1 |         12 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/domain/entities/exercise.dart                                | Dart     |         13 |          0 |          0 |         13 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/domain/entities/meal.dart                                    | Dart     |         13 |          0 |          2 |         15 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/domain/entities/muscle.dart                                  | Dart     |         13 |          0 |          0 |         13 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/domain/entities/muscle_group.dart                            | Dart     |         11 |          0 |          0 |         11 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/domain/entities/program.dart                                 | Dart     |          8 |          0 |          1 |          9 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/domain/entities/recipe.dart                                  | Dart     |         11 |          0 |          1 |         12 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/domain/entities/training.dart                                | Dart     |         11 |          0 |          1 |         12 |
+| /home/kilian/gymprime-project/gymprime/lib/features/shared/domain/usecases/diet_usecases.dart                           | Dart     |         -1 |          0 |          0 |         -1 |
+| /home/kilian/gymprime-project/gymprime/lib/injection_container.dart                                                     | Dart     |          8 |          3 |          5 |         16 |
+| /home/kilian/gymprime-project/gymprime/lib/main.dart                                                                    | Dart     |          1 |          0 |          0 |          1 |
+| /home/kilian/gymprime-project/gymprime/pubspec.yaml                                                                     | YAML     |          2 |          0 |          0 |          2 |
+| Total                                                                                                                   |          |      1,233 |          9 |        225 |      1,467 |
++-------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

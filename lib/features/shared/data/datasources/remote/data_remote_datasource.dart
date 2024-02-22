@@ -75,6 +75,8 @@ class DataRemoteDataSourceImpl implements DataRemoteDataSource {
         case "lastUpdates":
           value = json["lastUpdates"] as Map<String, int>;
           break;
+        case "preferences":
+          value = json["preferences"] as Map<String, 
         default:
           value = null;
           break;

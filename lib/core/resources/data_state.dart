@@ -1,9 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:dio/dio.dart';
-
 abstract class DataState<T> {
   final T? data;
-  final DioException? exception;
+  final Exception? exception;
 
   const DataState({
     this.data,
@@ -16,5 +14,5 @@ class DataSuccess<T> extends DataState<T> {
 }
 
 class DataFailure<T> extends DataState<T> {
-  const DataFailure(DioException exception) : super(exception: exception);
+  const DataFailure(Exception exception) : super(exception: exception);
 }

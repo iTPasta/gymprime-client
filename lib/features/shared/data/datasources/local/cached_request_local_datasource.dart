@@ -9,32 +9,27 @@ abstract class CachedRequestLocalDataSource {
 }
 
 class CachedRequestLocalDataSourceImpl implements CachedRequestLocalDataSource {
-  final CachedRequestLocalDB _cachedRequestLocalDB = CachedRequestLocalDB();
+  final CachedRequestLocalDB cachedRequestLocalDB;
 
-  static final CachedRequestLocalDataSourceImpl _instance =
-      CachedRequestLocalDataSourceImpl._internal();
-
-  CachedRequestLocalDataSourceImpl._internal();
-
-  factory CachedRequestLocalDataSourceImpl() {
-    return _instance;
-  }
+  CachedRequestLocalDataSourceImpl({
+    required this.cachedRequestLocalDB,
+  });
 
   @override
   Future<CachedRequestModel> addCachedRequest(
       CachedRequestModel cachedRequest) {
-    _cachedRequestLocalDB.insert(cachedRequestModel: cachedRequest);
+    cachedRequestLocalDB.insert(cachedRequestModel: cachedRequest);
     return Future.value(cachedRequest);
   }
 
   @override
   Future<ObjectId> removeCachedRequest(ObjectId id) {
-    _cachedRequestLocalDB.delete(id: id);
+    cachedRequestLocalDB.delete(id: id);
     return Future.value(id);
   }
 
   @override
   Future<List<CachedRequestModel>> getCachedRequests() {
-    return _cachedRequestLocalDB.fetchAll();
+    return cachedRequestLocalDB.fetchAll();
   }
 }

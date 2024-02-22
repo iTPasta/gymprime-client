@@ -1,6 +1,7 @@
 import 'package:gymprime/features/shared/data/datasources/local/database/recipe_local_db.dart';
 import 'package:gymprime/features/shared/data/models/recipe_model.dart';
 import 'package:objectid/objectid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class RecipeLocalDataSource {
   Future<List<RecipeModel>> getMyRecipes();
@@ -8,36 +9,54 @@ abstract class RecipeLocalDataSource {
   Future<RecipeModel> createRecipe(RecipeModel recipe);
   Future<RecipeModel> updateRecipe(ObjectId id, RecipeModel recipe);
   Future<ObjectId> deleteRecipe(ObjectId id);
+  int? getRecipesLastUpdate();
+  void setRecipesLastUpdate(int recipesLastUpdate);
 }
 
 class RecipeLocalDataSourceImpl implements RecipeLocalDataSource {
-  final RecipeLocalDB _recipeLocalDB = RecipeLocalDB();
+  final RecipeLocalDB recipeLocalDB;
+  final SharedPreferences sharedPreferences;
+
+  RecipeLocalDataSourceImpl({
+    required this.recipeLocalDB,
+    required this.sharedPreferences,
+  });
 
   @override
   Future<RecipeModel> createRecipe(RecipeModel recipe) {
-    _recipeLocalDB.insert(recipeModel: recipe);
+    recipeLocalDB.insert(recipeModel: recipe);
     return Future.value(recipe);
   }
 
   @override
   Future<ObjectId> deleteRecipe(ObjectId id) {
-    _recipeLocalDB.delete(id: id);
+    recipeLocalDB.delete(id: id);
     return Future.value(id);
   }
 
   @override
   Future<RecipeModel> getRecipe(ObjectId id) {
-    return _recipeLocalDB.fetchById(id: id);
+    return recipeLocalDB.fetchById(id: id);
   }
 
   @override
   Future<List<RecipeModel>> getMyRecipes() {
-    return _recipeLocalDB.fetchAll();
+    return recipeLocalDB.fetchAll();
   }
 
   @override
   Future<RecipeModel> updateRecipe(ObjectId id, RecipeModel recipe) {
-    _recipeLocalDB.update(id: id, recipeModel: recipe);
+    recipeLocalDB.update(id: id, recipeModel: recipe);
     return Future.value(recipe);
+  }
+
+  @override
+  int? getRecipesLastUpdate() {
+    return sharedPreferences.getInt("recipesLastUpdate");
+  }
+
+  @override
+  void setRecipesLastUpdate(int recipesLastUpdate) {
+    sharedPreferences.setInt("recipesLastUpdate", recipesLastUpdate);
   }
 }

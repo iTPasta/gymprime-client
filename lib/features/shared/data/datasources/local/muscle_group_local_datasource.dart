@@ -1,6 +1,7 @@
 import 'package:gymprime/features/shared/data/datasources/local/database/muscle_group_local_db.dart';
 import 'package:gymprime/features/shared/data/models/muscle_group_model.dart';
 import 'package:objectid/objectid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class MuscleGroupLocalDataSource {
   Future<List<MuscleGroupModel>> getAllMuscleGroups();
@@ -9,31 +10,39 @@ abstract class MuscleGroupLocalDataSource {
   Future<MuscleGroupModel> updateMuscleGroup(
       ObjectId id, MuscleGroupModel muscleGroup);
   Future<ObjectId> deleteMuscleGroup(ObjectId id);
+  int? getMuscleGroupsLastUpdate();
+  void setMuscleGroupsLastUpdate(int muscleGroupsLastUpdate);
 }
 
 class MuscleGroupLocalDataSourceImpl implements MuscleGroupLocalDataSource {
-  final MuscleGroupLocalDB _muscleGroupLocalDB = MuscleGroupLocalDB();
+  final MuscleGroupLocalDB muscleGroupLocalDB;
+  final SharedPreferences sharedPreferences;
+
+  MuscleGroupLocalDataSourceImpl({
+    required this.muscleGroupLocalDB,
+    required this.sharedPreferences,
+  });
 
   @override
   Future<MuscleGroupModel> createMuscleGroup(MuscleGroupModel muscleGroup) {
-    _muscleGroupLocalDB.insert(muscleGroupModel: muscleGroup);
+    muscleGroupLocalDB.insert(muscleGroupModel: muscleGroup);
     return Future.value(muscleGroup);
   }
 
   @override
   Future<ObjectId> deleteMuscleGroup(ObjectId id) {
-    _muscleGroupLocalDB.delete(id: id);
+    muscleGroupLocalDB.delete(id: id);
     return Future.value(id);
   }
 
   @override
   Future<MuscleGroupModel> getMuscleGroup(ObjectId id) {
-    return _muscleGroupLocalDB.fetchById(id: id);
+    return muscleGroupLocalDB.fetchById(id: id);
   }
 
   @override
   Future<List<MuscleGroupModel>> getAllMuscleGroups() {
-    return _muscleGroupLocalDB.fetchAll();
+    return muscleGroupLocalDB.fetchAll();
   }
 
   @override
@@ -41,7 +50,17 @@ class MuscleGroupLocalDataSourceImpl implements MuscleGroupLocalDataSource {
     ObjectId id,
     MuscleGroupModel muscleGroup,
   ) {
-    _muscleGroupLocalDB.update(id: id, muscleGroupModel: muscleGroup);
+    muscleGroupLocalDB.update(id: id, muscleGroupModel: muscleGroup);
     return Future.value(muscleGroup);
+  }
+
+  @override
+  int? getMuscleGroupsLastUpdate() {
+    return sharedPreferences.getInt("muscleGroupsLastUpdate");
+  }
+
+  @override
+  void setMuscleGroupsLastUpdate(int muscleGroupsLastUpdate) {
+    sharedPreferences.setInt("muscleGroupsLastUpdate", muscleGroupsLastUpdate);
   }
 }

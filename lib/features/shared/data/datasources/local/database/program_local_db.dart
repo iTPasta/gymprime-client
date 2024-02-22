@@ -1,48 +1,37 @@
+import 'package:gymprime/core/resources/local_database.dart';
 import 'package:gymprime/features/shared/data/models/program_model.dart';
 import 'package:objectid/objectid.dart';
 import 'package:sqflite/sqflite.dart';
 
-class ProgramLocalDB {
-  Database? database;
-  String? tableName;
+abstract class ProgramLocalDB implements LocalDatabaseTable {
+  Future<int> insert({required ProgramModel programModel});
+  Future<List<ProgramModel>> fetchAll();
+  Future<ProgramModel> fetchById({required ObjectId id});
+  Future<int> update({
+    required ObjectId id,
+    required ProgramModel programModel,
+  });
+  Future<int> delete({required ObjectId id});
+}
 
-  static final ProgramLocalDB _instance = ProgramLocalDB._internal();
+class ProgramLocalDBImpl implements ProgramLocalDB {
+  late final Database database;
+  final String tableName;
 
-  ProgramLocalDB._internal();
+  ProgramLocalDBImpl({
+    required this.tableName,
+  });
 
-  factory ProgramLocalDB() {
-    assert(
-      _instance.database != null && _instance.tableName != null,
-      "Local database not initialized yet.",
-    );
-
-    return _instance;
-  }
-
-  factory ProgramLocalDB.initialize({
-    required Database database,
-    required String tableName,
-  }) {
-    assert(
-      _instance.database == null || _instance.tableName == null,
-      "Local database already initialized.",
-    );
-
-    _instance.database = database;
-    _instance.tableName = tableName;
-    _instance.createTable();
-
-    return _instance;
-  }
-
-  Future<void> createTable() async {
-    await database!.execute(
+  @override
+  Future<void> initialize(Database database) async {
+    this.database = database;
+    await this.database.execute(
       '''
         CREATE TABLE IF NOT EXISTS $tableName (
           id  TEXT PRIMARY KEY NOT NULL,
           name TEXT,
           description TEXT,
-          exercises TEXT NOT NULL,
+          programs TEXT NOT NULL,
           trainings TEXT NOT NULL,
           goal TEXT NOT NULL
         );
@@ -50,19 +39,22 @@ class ProgramLocalDB {
     );
   }
 
+  @override
   Future<int> insert({required ProgramModel programModel}) async {
-    return await database!.insert(tableName!, programModel.toJson());
+    return await database.insert(tableName, programModel.toJson());
   }
 
+  @override
   Future<List<ProgramModel>> fetchAll() async {
-    final programModels = await database!.query(tableName!);
+    final programModels = await database.query(tableName);
     return programModels
         .map((modelMap) => ProgramModel.fromJson(modelMap))
         .toList();
   }
 
+  @override
   Future<ProgramModel> fetchById({required ObjectId id}) async {
-    final programModel = await database!.rawQuery(
+    final programModel = await database.rawQuery(
       '''
         SELECT * FROM $tableName WHERE id = ? ;
       ''',
@@ -71,12 +63,13 @@ class ProgramLocalDB {
     return ProgramModel.fromJson(programModel.first);
   }
 
+  @override
   Future<int> update({
     required ObjectId id,
     required ProgramModel programModel,
   }) async {
-    return await database!.update(
-      tableName!,
+    return await database.update(
+      tableName,
       programModel.toJson(),
       where: 'id = ?',
       conflictAlgorithm: ConflictAlgorithm.rollback,
@@ -84,9 +77,10 @@ class ProgramLocalDB {
     );
   }
 
+  @override
   Future<int> delete({required ObjectId id}) async {
-    return await database!.delete(
-      tableName!,
+    return await database.delete(
+      tableName,
       where: 'id = ?',
       whereArgs: [id.toString()],
     );

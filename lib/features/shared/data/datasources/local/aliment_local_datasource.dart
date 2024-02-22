@@ -1,6 +1,7 @@
 import 'package:gymprime/features/shared/data/datasources/local/database/aliment_local_db.dart';
 import 'package:gymprime/features/shared/data/models/aliment_model.dart';
 import 'package:objectid/objectid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AlimentLocalDataSource {
   Future<List<AlimentModel>> getMyAliments();
@@ -8,45 +9,54 @@ abstract class AlimentLocalDataSource {
   Future<AlimentModel> createAliment(AlimentModel diet);
   Future<AlimentModel> updateAliment(ObjectId id, AlimentModel diet);
   Future<ObjectId> deleteAliment(ObjectId id);
+  int? getAlimentsLastUpdate();
+  void setAlimentsLastUpdate(int alimentsLastUpdate);
 }
 
 class AlimentLocalDataSourceImpl implements AlimentLocalDataSource {
-  final AlimentLocalDB _alimentLocalDB = AlimentLocalDB();
+  final AlimentLocalDB alimentLocalDB;
+  final SharedPreferences sharedPreferences;
 
-  static final AlimentLocalDataSourceImpl _instance =
-      AlimentLocalDataSourceImpl._internal();
-
-  AlimentLocalDataSourceImpl._internal();
-
-  factory AlimentLocalDataSourceImpl() {
-    return _instance;
-  }
+  AlimentLocalDataSourceImpl({
+    required this.alimentLocalDB,
+    required this.sharedPreferences,
+  });
 
   @override
   Future<AlimentModel> createAliment(AlimentModel aliment) {
-    _alimentLocalDB.insert(alimentModel: aliment);
+    alimentLocalDB.insert(alimentModel: aliment);
     return Future.value(aliment);
   }
 
   @override
   Future<ObjectId> deleteAliment(ObjectId id) {
-    _alimentLocalDB.delete(id: id);
+    alimentLocalDB.delete(id: id);
     return Future.value(id);
   }
 
   @override
   Future<AlimentModel> getAliment(ObjectId id) {
-    return _alimentLocalDB.fetchById(id: id);
+    return alimentLocalDB.fetchById(id: id);
   }
 
   @override
   Future<List<AlimentModel>> getMyAliments() {
-    return _alimentLocalDB.fetchAll();
+    return alimentLocalDB.fetchAll();
   }
 
   @override
   Future<AlimentModel> updateAliment(ObjectId id, AlimentModel aliment) {
-    _alimentLocalDB.update(id: id, alimentModel: aliment);
+    alimentLocalDB.update(id: id, alimentModel: aliment);
     return Future.value(aliment);
+  }
+
+  @override
+  int? getAlimentsLastUpdate() {
+    return sharedPreferences.getInt("alimentsLastUpdate");
+  }
+
+  @override
+  void setAlimentsLastUpdate(int alimentsLastUpdate) {
+    sharedPreferences.setInt("alimentsLastUpdate", alimentsLastUpdate);
   }
 }

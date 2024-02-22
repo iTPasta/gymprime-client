@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/core/errors/failures.dart';
 import 'package:gymprime/core/resources/data_state.dart';
@@ -20,7 +19,7 @@ class CachedRequestRepositoryImpl implements CachedRequestRepository {
       final cachedRequests = await cachedRequestDataSource.getCachedRequests();
       return DataSuccess(cachedRequests);
     } on CacheException {
-      return DataFailure(DioException(requestOptions: requestOptions));
+      return DataFailure(Exception(requestOptions: requestOptions));
     }
   }
 

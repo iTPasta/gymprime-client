@@ -1,42 +1,31 @@
+import 'package:gymprime/core/resources/local_database.dart';
 import 'package:gymprime/features/shared/data/models/aliment_model.dart';
 import 'package:objectid/objectid.dart';
 import 'package:sqflite/sqflite.dart';
 
-class AlimentLocalDB {
-  Database? database;
-  String? tableName;
+abstract class AlimentLocalDB implements LocalDatabaseTable {
+  Future<int> insert({required AlimentModel alimentModel});
+  Future<List<AlimentModel>> fetchAll();
+  Future<AlimentModel> fetchById({required ObjectId id});
+  Future<int> update({
+    required ObjectId id,
+    required AlimentModel alimentModel,
+  });
+  Future<int> delete({required ObjectId id});
+}
 
-  static final AlimentLocalDB _instance = AlimentLocalDB._internal();
+class AlimentLocalDBImpl implements AlimentLocalDB {
+  late final Database database;
+  final String tableName;
 
-  AlimentLocalDB._internal();
+  AlimentLocalDBImpl({
+    required this.tableName,
+  });
 
-  factory AlimentLocalDB() {
-    assert(
-      _instance.database != null && _instance.tableName != null,
-      "Local database not initialized yet.",
-    );
-
-    return _instance;
-  }
-
-  factory AlimentLocalDB.initialize({
-    required Database database,
-    required String tableName,
-  }) {
-    assert(
-      _instance.database == null || _instance.tableName == null,
-      "Local database already initialized.",
-    );
-
-    _instance.database = database;
-    _instance.tableName = tableName;
-    _instance.createTable();
-
-    return _instance;
-  }
-
-  Future<void> createTable() async {
-    await database!.execute(
+  @override
+  Future<void> initialize(Database database) async {
+    this.database = database;
+    await this.database.execute(
       '''
         CREATE TABLE IF NOT EXISTS $tableName (
           id  TEXT PRIMARY KEY NOT NULL,
@@ -56,19 +45,22 @@ class AlimentLocalDB {
     );
   }
 
+  @override
   Future<int> insert({required AlimentModel alimentModel}) async {
-    return await database!.insert(tableName!, alimentModel.toJson());
+    return await database.insert(tableName, alimentModel.toJson());
   }
 
+  @override
   Future<List<AlimentModel>> fetchAll() async {
-    final alimentModels = await database!.query(tableName!);
+    final alimentModels = await database.query(tableName);
     return alimentModels
         .map((modelMap) => AlimentModel.fromJson(modelMap))
         .toList();
   }
 
+  @override
   Future<AlimentModel> fetchById({required ObjectId id}) async {
-    final alimentModel = await database!.rawQuery(
+    final alimentModel = await database.rawQuery(
       '''
         SELECT * FROM $tableName WHERE id = ? ;
       ''',
@@ -77,12 +69,13 @@ class AlimentLocalDB {
     return AlimentModel.fromJson(alimentModel.first);
   }
 
+  @override
   Future<int> update({
     required ObjectId id,
     required AlimentModel alimentModel,
   }) async {
-    return await database!.update(
-      tableName!,
+    return await database.update(
+      tableName,
       alimentModel.toJson(),
       where: 'id = ?',
       conflictAlgorithm: ConflictAlgorithm.rollback,
@@ -90,9 +83,10 @@ class AlimentLocalDB {
     );
   }
 
+  @override
   Future<int> delete({required ObjectId id}) async {
-    return await database!.delete(
-      tableName!,
+    return await database.delete(
+      tableName,
       where: 'id = ?',
       whereArgs: [id.toString()],
     );

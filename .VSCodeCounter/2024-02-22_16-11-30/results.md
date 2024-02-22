@@ -1,32 +1,32 @@
 # Summary
 
-Date : 2024-02-06 20:32:49
+Date : 2024-02-22 16:11:30
 
 Directory /home/kilian/gymprime-project/gymprime
 
-Total : 97 files,  2459 codes, 294 comments, 472 blanks, all 3225 lines
+Total : 125 files,  5379 codes, 300 comments, 813 blanks, all 6492 lines
 
 Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
 
 ## Languages
 | language | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| Dart | 51 | 955 | 17 | 195 | 1,167 |
+| Dart | 79 | 3,869 | 23 | 536 | 4,428 |
 | C++ | 16 | 531 | 121 | 182 | 834 |
 | XML | 10 | 463 | 48 | 12 | 523 |
 | JSON | 4 | 248 | 0 | 4 | 252 |
 | Groovy | 3 | 114 | 3 | 23 | 140 |
-| Swift | 6 | 56 | 7 | 20 | 83 |
+| Swift | 6 | 58 | 7 | 20 | 85 |
 | HTML | 1 | 38 | 16 | 6 | 60 |
-| YAML | 2 | 33 | 82 | 19 | 134 |
+| YAML | 2 | 37 | 82 | 19 | 138 |
 | Markdown | 2 | 13 | 0 | 9 | 22 |
 | Properties | 2 | 8 | 0 | 2 | 10 |
 
 ## Directories
 | path | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| . | 97 | 2,459 | 294 | 472 | 3,225 |
-| . (Files) | 3 | 43 | 82 | 26 | 151 |
+| . | 125 | 5,379 | 300 | 813 | 6,492 |
+| . (Files) | 3 | 47 | 82 | 26 | 155 |
 | android | 12 | 181 | 49 | 34 | 264 |
 | android (Files) | 3 | 53 | 0 | 12 | 65 |
 | android/app | 8 | 123 | 49 | 21 | 193 |
@@ -51,34 +51,38 @@ Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-
 | ios/Runner/Assets.xcassets/LaunchImage.imageset | 2 | 26 | 0 | 3 | 29 |
 | ios/Runner/Base.lproj | 2 | 61 | 2 | 2 | 65 |
 | ios/RunnerTests | 1 | 7 | 2 | 4 | 13 |
-| lib | 51 | 955 | 17 | 195 | 1,167 |
-| lib (Files) | 1 | 0 | 0 | 1 | 1 |
-| lib/core | 11 | 82 | 2 | 27 | 111 |
-| lib/core/errors | 2 | 15 | 1 | 8 | 24 |
+| lib | 79 | 3,869 | 23 | 536 | 4,428 |
+| lib (Files) | 2 | 103 | 6 | 11 | 120 |
+| lib/core | 12 | 137 | 2 | 39 | 178 |
+| lib/core/constants | 1 | 1 | 1 | 1 | 3 |
+| lib/core/errors | 1 | 8 | 0 | 4 | 12 |
+| lib/core/extensions | 1 | 6 | 0 | 2 | 8 |
 | lib/core/platform | 1 | 3 | 0 | 1 | 4 |
-| lib/core/resources | 7 | 60 | 1 | 16 | 77 |
+| lib/core/resources | 7 | 115 | 1 | 29 | 145 |
 | lib/core/usecases | 1 | 4 | 0 | 2 | 6 |
-| lib/features | 39 | 873 | 15 | 167 | 1,055 |
+| lib/features | 65 | 3,629 | 15 | 486 | 4,130 |
 | lib/features/app_starting | 2 | 12 | 0 | 5 | 17 |
 | lib/features/app_starting/domain | 2 | 12 | 0 | 5 | 17 |
 | lib/features/app_starting/domain/repository | 1 | 5 | 0 | 2 | 7 |
 | lib/features/app_starting/domain/usecases | 1 | 7 | 0 | 3 | 10 |
-| lib/features/shared | 37 | 861 | 15 | 162 | 1,038 |
-| lib/features/shared/data | 15 | 451 | 5 | 71 | 527 |
-| lib/features/shared/data/datasources | 3 | 26 | 0 | 6 | 32 |
-| lib/features/shared/data/datasources/local | 2 | 17 | 0 | 4 | 21 |
-| lib/features/shared/data/datasources/remote | 1 | 9 | 0 | 2 | 11 |
-| lib/features/shared/data/models | 10 | 325 | 0 | 51 | 376 |
-| lib/features/shared/data/repositories | 2 | 100 | 5 | 14 | 119 |
-| lib/features/shared/domain | 22 | 410 | 10 | 91 | 511 |
-| lib/features/shared/domain/entities | 10 | 223 | 10 | 45 | 278 |
+| lib/features/shared | 63 | 3,617 | 15 | 481 | 4,113 |
+| lib/features/shared/data | 41 | 3,091 | 5 | 384 | 3,480 |
+| lib/features/shared/data/datasources | 29 | 2,596 | 1 | 310 | 2,907 |
+| lib/features/shared/data/datasources/local | 20 | 1,290 | 1 | 205 | 1,496 |
+| lib/features/shared/data/datasources/local (Files) | 10 | 510 | 1 | 106 | 617 |
+| lib/features/shared/data/datasources/local/database | 10 | 780 | 0 | 99 | 879 |
+| lib/features/shared/data/datasources/remote | 9 | 1,306 | 0 | 105 | 1,411 |
+| lib/features/shared/data/models | 10 | 400 | 0 | 60 | 460 |
+| lib/features/shared/data/repositories | 2 | 95 | 4 | 14 | 113 |
+| lib/features/shared/domain | 22 | 526 | 10 | 97 | 633 |
+| lib/features/shared/domain/entities | 10 | 340 | 10 | 51 | 401 |
 | lib/features/shared/domain/repositories | 10 | 108 | 0 | 20 | 128 |
-| lib/features/shared/domain/usecases | 2 | 79 | 0 | 26 | 105 |
+| lib/features/shared/domain/usecases | 2 | 78 | 0 | 26 | 104 |
 | linux | 5 | 94 | 27 | 38 | 159 |
 | linux (Files) | 3 | 86 | 18 | 27 | 131 |
 | linux/flutter | 2 | 8 | 9 | 11 | 28 |
-| macos | 6 | 448 | 5 | 16 | 469 |
-| macos/Flutter | 1 | 10 | 3 | 4 | 17 |
+| macos | 6 | 450 | 5 | 16 | 471 |
+| macos/Flutter | 1 | 12 | 3 | 4 | 19 |
 | macos/Runner | 4 | 431 | 0 | 8 | 439 |
 | macos/Runner (Files) | 2 | 20 | 0 | 6 | 26 |
 | macos/Runner/Assets.xcassets | 1 | 68 | 0 | 1 | 69 |

@@ -20,6 +20,17 @@ import 'package:gymprime/features/shared/data/datasources/local/muscle_local_dat
 import 'package:gymprime/features/shared/data/datasources/local/program_local_datasource.dart';
 import 'package:gymprime/features/shared/data/datasources/local/recipe_local_datasource.dart';
 import 'package:gymprime/features/shared/data/datasources/local/training_local_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/remote/aliment_remote_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/remote/data_remote_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/remote/diet_remote_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/remote/exercise_remote_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/remote/last_updates_remote_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/remote/meal_remote_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/remote/muscle_group_remote_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/remote/muscle_remote_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/remote/program_remote_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/remote/recipe_remote_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/remote/training_remote_datasource.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -128,6 +139,52 @@ Future<void> initializeDependencies() async {
   ));
 
   // Remote datasource
+  sl.registerSingleton<AlimentRemoteDataSource>(AlimentRemoteDataSourceImpl(
+    client: sl<http.Client>(),
+    routeName: 'aliments',
+  ));
+  sl.registerSingleton<DataRemoteDataSource>(DataRemoteDataSourceImpl(
+    client: sl<http.Client>(),
+    routeName: 'data',
+  ));
+  sl.registerSingleton<DietRemoteDataSource>(DietRemoteDataSourceImpl(
+    client: sl<http.Client>(),
+    routeName: 'diets',
+  ));
+  sl.registerSingleton<ExerciseRemoteDataSource>(ExerciseRemoteDataSourceImpl(
+    client: sl<http.Client>(),
+    routeName: 'exercises',
+  ));
+  sl.registerSingleton<LastUpdatesRemoteDataSource>(
+      LastUpdatesRemoteDataSourceImpl(
+    client: sl<http.Client>(),
+    routeName: 'lastupdates',
+  ));
+  sl.registerSingleton<MealRemoteDataSource>(MealRemoteDataSourceImpl(
+    client: sl<http.Client>(),
+    routeName: 'meals',
+  ));
+  sl.registerSingleton<MuscleGroupRemoteDataSource>(
+      MuscleGroupRemoteDataSourceImpl(
+    client: sl<http.Client>(),
+    routeName: 'musclegroups',
+  ));
+  sl.registerSingleton<MuscleRemoteDataSource>(MuscleRemoteDataSourceImpl(
+    client: sl<http.Client>(),
+    routeName: 'muscles',
+  ));
+  sl.registerSingleton<ProgramRemoteDataSource>(ProgramRemoteDataSourceImpl(
+    client: sl<http.Client>(),
+    routeName: 'programs',
+  ));
+  sl.registerSingleton<RecipeRemoteDataSource>(RecipeRemoteDataSourceImpl(
+    client: sl<http.Client>(),
+    routeName: 'recipes',
+  ));
+  sl.registerSingleton<TrainingRemoteDataSource>(TrainingRemoteDataSourceImpl(
+    client: sl<http.Client>(),
+    routeName: 'trainings',
+  ));
 
   // Repositories
 }

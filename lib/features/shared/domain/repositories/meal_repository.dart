@@ -9,4 +9,5 @@ abstract class MealRepository {
   Future<DataState<MealEntity>> createMeal(MealEntity mealEntity);
   Future<DataState<MealEntity>> updateMeal(MealEntity mealEntity);
   Future<DataState<ObjectId>> deleteMeal(ObjectId id);
+  Future<DataState<void>> syncMyMeals();
 }

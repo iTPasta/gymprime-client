@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:gymprime/core/resources/language.dart';
+import 'package:gymprime/core/enums/language.dart';
 import 'package:gymprime/features/shared/data/models/muscle_model.dart';
 import 'package:objectid/objectid.dart';
 

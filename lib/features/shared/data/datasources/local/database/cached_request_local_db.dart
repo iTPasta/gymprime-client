@@ -1,15 +1,15 @@
 import 'package:gymprime/core/resources/local_database.dart';
-import 'package:gymprime/features/shared/data/models/cache_request_model.dart';
+import 'package:gymprime/features/shared/data/models/request_model.dart';
 import 'package:objectid/objectid.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class CachedRequestLocalDB implements LocalDatabaseTable {
-  Future<int> insert({required CachedRequestModel cachedRequestModel});
-  Future<List<CachedRequestModel>> fetchAll();
-  Future<CachedRequestModel> fetchById({required ObjectId id});
+  Future<int> insert({required RequestModel cachedRequestModel});
+  Future<List<RequestModel>> fetchAll();
+  Future<RequestModel> fetchById({required ObjectId id});
   Future<int> update({
     required ObjectId id,
-    required CachedRequestModel cachedRequestModel,
+    required RequestModel cachedRequestModel,
   });
   Future<int> delete({required ObjectId id});
 }
@@ -39,33 +39,33 @@ class CachedRequestLocalDBImpl implements CachedRequestLocalDB {
   }
 
   @override
-  Future<int> insert({required CachedRequestModel cachedRequestModel}) async {
+  Future<int> insert({required RequestModel cachedRequestModel}) async {
     return await database.insert(tableName, cachedRequestModel.toJson());
   }
 
   @override
-  Future<List<CachedRequestModel>> fetchAll() async {
+  Future<List<RequestModel>> fetchAll() async {
     final cachedRequestModels = await database.query(tableName);
     return cachedRequestModels
-        .map((modelMap) => CachedRequestModel.fromJson(modelMap))
+        .map((modelMap) => RequestModel.fromJson(modelMap))
         .toList();
   }
 
   @override
-  Future<CachedRequestModel> fetchById({required ObjectId id}) async {
+  Future<RequestModel> fetchById({required ObjectId id}) async {
     final cachedRequestModel = await database.rawQuery(
       '''
         SELECT * FROM $tableName WHERE id = ? ;
       ''',
       [id],
     );
-    return CachedRequestModel.fromJson(cachedRequestModel.first);
+    return RequestModel.fromJson(cachedRequestModel.first);
   }
 
   @override
   Future<int> update({
     required ObjectId id,
-    required CachedRequestModel cachedRequestModel,
+    required RequestModel cachedRequestModel,
   }) async {
     return await database.update(
       tableName,

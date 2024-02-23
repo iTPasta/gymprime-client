@@ -8,4 +8,5 @@ abstract class MuscleRepository {
   Future<DataState<MuscleEntity>> createMuscle(MuscleEntity muscleEntity);
   Future<DataState<MuscleEntity>> updateMuscle(MuscleEntity muscleEntity);
   Future<DataState<ObjectId>> deleteMuscle(ObjectId id);
+  Future<DataState<void>> syncMuscles();
 }

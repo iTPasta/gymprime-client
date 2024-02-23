@@ -9,4 +9,5 @@ abstract class RecipeRepository {
   Future<DataState<RecipeEntity>> createRecipe(RecipeEntity recipeEntity);
   Future<DataState<RecipeEntity>> updateRecipe(RecipeEntity recipeEntity);
   Future<DataState<ObjectId>> deleteRecipe(ObjectId id);
+  Future<DataState<void>> syncMyRecipes();
 }

@@ -1,4 +1,4 @@
-import 'package:gymprime/core/resources/language.dart';
+import 'package:gymprime/core/enums/language.dart';
 import 'package:gymprime/features/shared/data/models/exercise_model.dart';
 import 'package:objectid/objectid.dart';
 

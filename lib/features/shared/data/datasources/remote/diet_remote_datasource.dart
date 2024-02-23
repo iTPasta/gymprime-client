@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:gymprime/core/constants/constants.dart';
 import 'package:gymprime/core/errors/exceptions.dart';
-import 'package:gymprime/core/resources/headers.dart';
+import 'package:gymprime/core/utils/headers.dart';
 import 'package:gymprime/features/shared/data/models/diet_model.dart';
 
 abstract class DietRemoteDataSource {

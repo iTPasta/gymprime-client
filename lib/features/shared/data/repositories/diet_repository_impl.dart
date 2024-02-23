@@ -1,14 +1,10 @@
-import 'package:dartz/dartz.dart';
 import 'package:gymprime/core/errors/exceptions.dart';
-import 'package:gymprime/core/errors/failures.dart';
-import 'package:gymprime/core/platform/network_info.dart';
 import 'package:gymprime/core/resources/data_state.dart';
-import 'package:gymprime/core/extensions/objectid_extension.dart';
 import 'package:gymprime/features/shared/data/datasources/local/diet_local_datasource.dart';
 import 'package:gymprime/features/shared/data/datasources/remote/diet_remote_datasource.dart';
 import 'package:gymprime/features/shared/domain/entities/diet_entity.dart';
 import 'package:gymprime/features/shared/domain/repositories/diet_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:objectid/objectid.dart';
 
 class DietRepositoryImpl extends DietRepository {
   final DietRemoteDataSource remoteDataSource;
@@ -20,39 +16,56 @@ class DietRepositoryImpl extends DietRepository {
   });
 
   @override
+  Future<DataState<List<DietEntity>>> getAllDiets() async {
+    try {
+      return DataSuccess(await remoteDataSource.getAllDiets());
+    } on ServerException catch (exception) {
+      return DataFailure(exception);
+    }
+  }
+
+  @override
   Future<DataState<List<DietEntity>>> getMyDiets() async {
     try {
-      final remoteDiets = await remoteDataSource.getMyDiets();
-    } on ServerException {
-      return const Left(ServerFailure(""));
+      return DataSuccess(await localDataSource.getMyDiets());
+    } on CacheException catch (exception) {
+      return DataFailure(exception);
     }
-    throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, DietEntity>> getDiet(ObjectId id) {
-    // TODO: implement getDiet
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, DietEntity>> createDiet(DietEntity diet) async {
-    if (await networkInfo.isConnected) {
-    } else {
-      // TODO: cache data
+  Future<DataState<DietEntity>> getDiet(ObjectId id) async {
+    try {
+      return DataSuccess(await localDataSource.getDiet(id));
+    } on CacheException catch (exception) {
+      return DataFailure(exception);
     }
-    throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, DietEntity>> updateDiet(DietEntity diet) {
+  Future<DataState<DietEntity>> createDiet(DietEntity diet) async {
+    try {
+      return DataSuccess(await localDataSource.createDiet(diet.toModel()));
+    } on CacheException catch (exception) {
+      return DataFailure(exception);
+    }
+  }
+
+  @override
+  Future<DataState<DietEntity>> updateDiet(DietEntity diet) async {
     // TODO: implement updateDiet
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, ObjectId>> deleteDiet(ObjectId id) async {
+  Future<DataState<ObjectId>> deleteDiet(ObjectId id) async {
     // TODO: implement deleteDiet
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DataState<void>> syncMyDiets() async {
+    // TODO: implement syncMyDiets
     throw UnimplementedError();
   }
 }

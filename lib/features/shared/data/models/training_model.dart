@@ -36,4 +36,14 @@ class TrainingModel extends TrainingEntity {
       sets: sets,
     );
   }
+
+  static List<TrainingModel> fromJsonToList(
+    List<Map<String, dynamic>> jsonTrainings,
+  ) {
+    final List<TrainingModel> trainingsList = [];
+    for (final jsonTraining in jsonTrainings) {
+      trainingsList.add(TrainingModel.fromJson(jsonTraining));
+    }
+    return trainingsList;
+  }
 }

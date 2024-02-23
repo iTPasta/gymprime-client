@@ -1,4 +1,4 @@
-import 'package:gymprime/injection_container.dart';
+import 'package:gymprime/core/di/injection_container.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final sharedPreferences = sl<SharedPreferences>();

@@ -1,8 +1,9 @@
 import 'package:gymprime/core/resources/data_state.dart';
-import 'package:gymprime/features/shared/domain/entities/cached_request_entity.dart';
+import 'package:gymprime/features/shared/domain/entities/request_entity.dart';
+import 'package:objectid/objectid.dart';
 
 abstract class CachedRequestRepository {
-  Future<DataState<List<CachedRequestEntity>>> getCachedRequests();
-  Future<DataState<void>> addCachedRequest(CachedRequestEntity cachedRequest);
-  Future<DataState<void>> removeCacheRequest(int id);
+  Future<DataState<List<RequestEntity>>> getCachedRequests();
+  Future<DataState<void>> cacheRequest(RequestEntity cachedRequest);
+  Future<DataState<void>> removeCachedRequest(ObjectId id);
 }

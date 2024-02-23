@@ -10,4 +10,5 @@ abstract class ExerciseRepository {
   Future<DataState<ExerciseEntity>> updateExercise(
       ExerciseEntity exerciseEntity);
   Future<DataState<ObjectId>> deleteExercise(ObjectId id);
+  Future<DataState<void>> syncExercises();
 }

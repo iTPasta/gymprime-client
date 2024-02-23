@@ -2,13 +2,11 @@ import 'dart:convert';
 
 import 'package:objectid/objectid.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:gymprime/core/constants/constants.dart';
 import 'package:gymprime/core/errors/exceptions.dart';
-import 'package:gymprime/core/resources/headers.dart';
+import 'package:gymprime/core/utils/headers.dart';
 import 'package:gymprime/features/shared/data/models/program_model.dart';
-import 'package:gymprime/injection_container.dart';
 
 abstract class ProgramRemoteDataSource {
   Future<List<ProgramModel>> getAllPrograms();
@@ -20,10 +18,13 @@ abstract class ProgramRemoteDataSource {
 }
 
 class ProgramRemoteDataSourceImpl implements ProgramRemoteDataSource {
-  final client = sl<http.Client>();
-  final sharedPreferences = sl<SharedPreferences>();
+  final http.Client client;
+  final String routeName;
 
-  static const String routeName = 'programs';
+  ProgramRemoteDataSourceImpl({
+    required this.client,
+    required this.routeName,
+  });
 
   @override
   Future<List<ProgramModel>> getAllPrograms() async {

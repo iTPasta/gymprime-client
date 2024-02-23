@@ -9,4 +9,5 @@ abstract class ProgramRepository {
   Future<DataState<ProgramEntity>> createProgram(ProgramEntity programEntity);
   Future<DataState<ProgramEntity>> updateProgram(ProgramEntity programEntity);
   Future<DataState<ObjectId>> deleteProgram(ObjectId id);
+  Future<DataState<void>> syncMyPrograms();
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:gymprime/features/shared/domain/entities/exercise_entity.dart';
+import 'package:objectid/objectid.dart';
 
 class ExerciseModel extends ExerciseEntity {
   const ExerciseModel({
@@ -13,7 +14,9 @@ class ExerciseModel extends ExerciseEntity {
 
   factory ExerciseModel.fromJson(Map<String, dynamic> map) {
     return ExerciseModel(
-      id: map['_id'] ?? map['id'],
+      id: map['_id'] != null
+          ? ObjectId.fromHexString(map['_id'])
+          : ObjectId.fromHexString(map['id']),
       names: map['names'] ?? {},
       descriptions: map['descriptions'] ?? {},
       muscles: map['muscles'] ?? [],
@@ -39,5 +42,15 @@ class ExerciseModel extends ExerciseEntity {
       muscles: muscles,
       muscleGroup: muscleGroup,
     );
+  }
+
+  static List<ExerciseModel> fromJsonToList(
+    List<Map<String, dynamic>> jsonExercises,
+  ) {
+    final List<ExerciseModel> exercisesList = [];
+    for (final jsonExercise in jsonExercises) {
+      exercisesList.add(ExerciseModel.fromJson(jsonExercise));
+    }
+    return exercisesList;
   }
 }

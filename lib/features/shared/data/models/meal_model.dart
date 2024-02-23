@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:gymprime/features/shared/domain/entities/meal_entity.dart';
+import 'package:objectid/objectid.dart';
 
 class MealModel extends MealEntity {
   const MealModel({
@@ -13,7 +14,9 @@ class MealModel extends MealEntity {
 
   factory MealModel.fromJson(Map<String, dynamic> map) {
     return MealModel(
-      id: map['_id'] ?? map['id'],
+      id: map['_id'] != null
+          ? ObjectId.fromHexString(map['_id'])
+          : ObjectId.fromHexString(map['id']),
       name: map['name'],
       description: map['description'],
       aliments: map['aliments'] ?? [],
@@ -39,5 +42,15 @@ class MealModel extends MealEntity {
       aliments: aliments,
       recipes: recipes,
     );
+  }
+
+  static List<MealModel> fromJsonToList(
+    List<Map<String, dynamic>> jsonMeals,
+  ) {
+    final List<MealModel> mealsList = [];
+    for (final jsonMeal in jsonMeals) {
+      mealsList.add(MealModel.fromJson(jsonMeal));
+    }
+    return mealsList;
   }
 }

@@ -11,4 +11,5 @@ abstract class TrainingRepository {
   Future<DataState<TrainingEntity>> updateTraining(
       TrainingEntity trainingEntity);
   Future<DataState<ObjectId>> deleteTraining(ObjectId id);
+  Future<DataState<void>> syncMyTrainings();
 }

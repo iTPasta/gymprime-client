@@ -2,13 +2,11 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:objectid/objectid.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:gymprime/core/constants/constants.dart';
 import 'package:gymprime/core/errors/exceptions.dart';
-import 'package:gymprime/core/resources/headers.dart';
+import 'package:gymprime/core/utils/headers.dart';
 import 'package:gymprime/features/shared/data/models/muscle_group_model.dart';
-import 'package:gymprime/injection_container.dart';
 
 abstract class MuscleGroupRemoteDataSource {
   Future<(List<MuscleGroupModel>, int)> getAllMuscleGroups();
@@ -20,10 +18,13 @@ abstract class MuscleGroupRemoteDataSource {
 }
 
 class MuscleGroupRemoteDataSourceImpl implements MuscleGroupRemoteDataSource {
-  final client = sl<http.Client>();
-  final sharedPreferences = sl<SharedPreferences>();
+  final http.Client client;
+  final String routeName;
 
-  static const String routeName = 'muscleGroups';
+  MuscleGroupRemoteDataSourceImpl({
+    required this.client,
+    required this.routeName,
+  });
 
   @override
   Future<(List<MuscleGroupModel>, int)> getAllMuscleGroups() async {

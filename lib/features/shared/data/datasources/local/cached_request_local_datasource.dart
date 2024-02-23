@@ -1,10 +1,10 @@
 import 'package:gymprime/features/shared/data/datasources/local/database/cached_request_local_db.dart';
-import 'package:gymprime/features/shared/data/models/cache_request_model.dart';
+import 'package:gymprime/features/shared/data/models/request_model.dart';
 import 'package:objectid/objectid.dart';
 
 abstract class CachedRequestLocalDataSource {
-  Future<List<CachedRequestModel>> getCachedRequests();
-  Future<void> addCachedRequest(CachedRequestModel cachedRequest);
+  Future<List<RequestModel>> getCachedRequests();
+  Future<void> cacheRequest(RequestModel cachedRequest);
   Future<void> removeCachedRequest(ObjectId id);
 }
 
@@ -16,8 +16,7 @@ class CachedRequestLocalDataSourceImpl implements CachedRequestLocalDataSource {
   });
 
   @override
-  Future<CachedRequestModel> addCachedRequest(
-      CachedRequestModel cachedRequest) {
+  Future<RequestModel> cacheRequest(RequestModel cachedRequest) {
     cachedRequestLocalDB.insert(cachedRequestModel: cachedRequest);
     return Future.value(cachedRequest);
   }
@@ -29,7 +28,7 @@ class CachedRequestLocalDataSourceImpl implements CachedRequestLocalDataSource {
   }
 
   @override
-  Future<List<CachedRequestModel>> getCachedRequests() {
+  Future<List<RequestModel>> getCachedRequests() {
     return cachedRequestLocalDB.fetchAll();
   }
 }

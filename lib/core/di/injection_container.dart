@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:gymprime/core/resources/local_database.dart';
 import 'package:gymprime/features/shared/data/datasources/local/aliment_local_datasource.dart';
-import 'package:gymprime/features/shared/data/datasources/local/cached_request_local_datasource.dart';
+import 'package:gymprime/features/shared/data/datasources/local/action_local_database.dart';
 import 'package:gymprime/features/shared/data/datasources/local/database/aliment_local_db.dart';
-import 'package:gymprime/features/shared/data/datasources/local/database/cached_request_local_db.dart';
+import 'package:gymprime/features/shared/data/datasources/local/database/action_local_db.dart';
 import 'package:gymprime/features/shared/data/datasources/local/database/diet_local_db.dart';
 import 'package:gymprime/features/shared/data/datasources/local/database/exercise_local_db.dart';
 import 'package:gymprime/features/shared/data/datasources/local/database/meal_local_db.dart';
@@ -49,8 +49,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<AlimentLocalDB>(
     AlimentLocalDBImpl(tableName: 'aliment'),
   );
-  sl.registerSingleton<CachedRequestLocalDB>(
-    CachedRequestLocalDBImpl(tableName: 'cachedRequest'),
+  sl.registerSingleton<ActionLocalDB>(
+    ActionLocalDBImpl(tableName: 'cachedAction'),
   );
   sl.registerSingleton<DietLocalDB>(
     DietLocalDBImpl(tableName: 'diet'),
@@ -81,7 +81,7 @@ Future<void> initializeDependencies() async {
     name: 'gymprime.db',
     tables: [
       sl<AlimentLocalDB>(),
-      sl<CachedRequestLocalDB>(),
+      sl<ActionLocalDB>(),
       sl<DietLocalDB>(),
       sl<ExerciseLocalDB>(),
       sl<MealLocalDB>(),
@@ -100,9 +100,8 @@ Future<void> initializeDependencies() async {
     alimentLocalDB: sl<AlimentLocalDB>(),
     sharedPreferences: sl<SharedPreferences>(),
   ));
-  sl.registerSingleton<CachedRequestLocalDataSource>(
-      CachedRequestLocalDataSourceImpl(
-    cachedRequestLocalDB: sl<CachedRequestLocalDB>(),
+  sl.registerSingleton<CachedActionLocalDataSource>(ActionLocalDataSourceImpl(
+    actionLocalDB: sl<ActionLocalDB>(),
   ));
   sl.registerSingleton<DietLocalDataSource>(DietLocalDataSourceImpl(
     dietLocalDB: sl<DietLocalDB>(),

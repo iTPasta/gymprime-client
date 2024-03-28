@@ -1,17 +1,17 @@
 import 'dart:convert';
 
+import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:http/http.dart' as http;
 import 'package:objectid/objectid.dart';
 
 import 'package:gymprime/core/constants/constants.dart';
-import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/core/utils/headers.dart';
 import 'package:gymprime/features/shared/data/models/muscle_model.dart';
 
 abstract class MuscleRemoteDataSource {
   Future<(List<MuscleModel>, int)> getAllMuscles();
   Future<MuscleModel> getMuscle(ObjectId id);
-  Future<(MuscleModel, int)> createMuscle(MuscleModel muscle);
+  Future<(ObjectId, int)> createMuscle(MuscleModel muscle);
   Future<int> updateMuscle(MuscleModel muscle);
   Future<int> deleteMuscle(ObjectId id);
 }
@@ -74,7 +74,7 @@ class MuscleRemoteDataSourceImpl implements MuscleRemoteDataSource {
   }
 
   @override
-  Future<(MuscleModel, int)> createMuscle(MuscleModel muscle) async {
+  Future<(ObjectId, int)> createMuscle(MuscleModel muscle) async {
     final response = await client.post(
       Uri.http(
         APIBaseURL,
@@ -88,10 +88,9 @@ class MuscleRemoteDataSourceImpl implements MuscleRemoteDataSource {
     );
     if (response.statusCode == 201) {
       final Map<String, dynamic> json = jsonDecode(response.body);
-      final Map<String, dynamic> muscleJson = json['muscle'];
-      final MuscleModel muscle = MuscleModel.fromJson(muscleJson);
+      final ObjectId muscleId = ObjectId.fromHexString(json['muscleId']);
       final int musclesLastUpdate = json['musclesLastUpdate'];
-      return (muscle, musclesLastUpdate);
+      return (muscleId, musclesLastUpdate);
     } else {
       throw ServerException(response: response);
     }

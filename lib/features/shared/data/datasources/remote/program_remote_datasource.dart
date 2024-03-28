@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:objectid/objectid.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:gymprime/core/constants/constants.dart';
-import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/core/utils/headers.dart';
 import 'package:gymprime/features/shared/data/models/program_model.dart';
 
@@ -12,7 +12,7 @@ abstract class ProgramRemoteDataSource {
   Future<List<ProgramModel>> getAllPrograms();
   Future<(List<ProgramModel>, int)> getMyPrograms();
   Future<ProgramModel> getProgram(ObjectId id);
-  Future<(ProgramModel, int)> createProgram(ProgramModel program);
+  Future<(ObjectId, int)> createProgram(ProgramModel program);
   Future<int> updateProgram(ProgramModel program);
   Future<int> deleteProgram(ObjectId id);
 }
@@ -100,7 +100,7 @@ class ProgramRemoteDataSourceImpl implements ProgramRemoteDataSource {
   }
 
   @override
-  Future<(ProgramModel, int)> createProgram(ProgramModel program) async {
+  Future<(ObjectId, int)> createProgram(ProgramModel program) async {
     final response = await client.post(
       Uri.http(
         APIBaseURL,
@@ -114,10 +114,9 @@ class ProgramRemoteDataSourceImpl implements ProgramRemoteDataSource {
     );
     if (response.statusCode == 201) {
       final Map<String, dynamic> json = jsonDecode(response.body);
-      final Map<String, dynamic> programJson = json['program'];
-      final ProgramModel program = ProgramModel.fromJson(programJson);
+      final ObjectId programId = ObjectId.fromHexString(json['programId']);
       final int programsLastUpdate = json['programsLastUpdate'];
-      return (program, programsLastUpdate);
+      return (programId, programsLastUpdate);
     } else {
       throw ServerException(response: response);
     }

@@ -1,18 +1,17 @@
 import 'dart:convert';
 
+import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:http/http.dart' as http;
 import 'package:objectid/objectid.dart';
 
 import 'package:gymprime/core/constants/constants.dart';
-import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/core/utils/headers.dart';
 import 'package:gymprime/features/shared/data/models/muscle_group_model.dart';
 
 abstract class MuscleGroupRemoteDataSource {
   Future<(List<MuscleGroupModel>, int)> getAllMuscleGroups();
   Future<MuscleGroupModel> getMuscleGroup(ObjectId id);
-  Future<(MuscleGroupModel, int)> createMuscleGroup(
-      MuscleGroupModel muscleGroup);
+  Future<(ObjectId, int)> createMuscleGroup(MuscleGroupModel muscleGroup);
   Future<int> updateMuscleGroup(MuscleGroupModel muscleGroup);
   Future<int> deleteMuscleGroup(ObjectId id);
 }
@@ -76,7 +75,7 @@ class MuscleGroupRemoteDataSourceImpl implements MuscleGroupRemoteDataSource {
   }
 
   @override
-  Future<(MuscleGroupModel, int)> createMuscleGroup(
+  Future<(ObjectId, int)> createMuscleGroup(
       MuscleGroupModel muscleGroup) async {
     final response = await client.post(
       Uri.http(
@@ -91,11 +90,10 @@ class MuscleGroupRemoteDataSourceImpl implements MuscleGroupRemoteDataSource {
     );
     if (response.statusCode == 201) {
       final Map<String, dynamic> json = jsonDecode(response.body);
-      final Map<String, dynamic> muscleGroupJson = json['muscleGroup'];
-      final MuscleGroupModel muscleGroup =
-          MuscleGroupModel.fromJson(muscleGroupJson);
+      final ObjectId muscleGroupId =
+          ObjectId.fromHexString(json['muscleGroupId']);
       final int muscleGroupsLastUpdate = json['muscleGroupsLastUpdate'];
-      return (muscleGroup, muscleGroupsLastUpdate);
+      return (muscleGroupId, muscleGroupsLastUpdate);
     } else {
       throw ServerException(response: response);
     }

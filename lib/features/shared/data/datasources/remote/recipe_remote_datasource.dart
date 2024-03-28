@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:objectid/objectid.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:gymprime/core/constants/constants.dart';
-import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/core/utils/headers.dart';
 import 'package:gymprime/features/shared/data/models/recipe_model.dart';
 
@@ -12,7 +12,7 @@ abstract class RecipeRemoteDataSource {
   Future<List<RecipeModel>> getAllRecipes();
   Future<(List<RecipeModel>, int)> getMyRecipes();
   Future<RecipeModel> getRecipe(ObjectId id);
-  Future<(RecipeModel, int)> createRecipe(RecipeModel recipe);
+  Future<(ObjectId, int)> createRecipe(RecipeModel recipe);
   Future<int> updateRecipe(RecipeModel recipe);
   Future<int> deleteRecipe(ObjectId id);
 }
@@ -100,7 +100,7 @@ class RecipeRemoteDataSourceImpl implements RecipeRemoteDataSource {
   }
 
   @override
-  Future<(RecipeModel, int)> createRecipe(RecipeModel recipe) async {
+  Future<(ObjectId, int)> createRecipe(RecipeModel recipe) async {
     final response = await client.post(
       Uri.http(
         APIBaseURL,
@@ -114,10 +114,9 @@ class RecipeRemoteDataSourceImpl implements RecipeRemoteDataSource {
     );
     if (response.statusCode == 201) {
       final Map<String, dynamic> json = jsonDecode(response.body);
-      final Map<String, dynamic> recipeJson = json['recipe'];
-      final RecipeModel recipe = RecipeModel.fromJson(recipeJson);
+      final ObjectId recipeId = ObjectId.fromHexString(json['recipeId']);
       final int recipesLastUpdate = json['recipesLastUpdate'];
-      return (recipe, recipesLastUpdate);
+      return (recipeId, recipesLastUpdate);
     } else {
       throw ServerException(response: response);
     }

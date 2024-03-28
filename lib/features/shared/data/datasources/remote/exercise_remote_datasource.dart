@@ -1,17 +1,17 @@
 import 'dart:convert';
 
+import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:http/http.dart' as http;
 import 'package:objectid/objectid.dart';
 
 import 'package:gymprime/core/constants/constants.dart';
-import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/core/utils/headers.dart';
 import 'package:gymprime/features/shared/data/models/exercise_model.dart';
 
 abstract class ExerciseRemoteDataSource {
   Future<(List<ExerciseModel>, int)> getAllExercises();
   Future<ExerciseModel> getExercise(ObjectId id);
-  Future<(ExerciseModel, int)> createExercise(ExerciseModel exercise);
+  Future<(ObjectId, int)> createExercise(ExerciseModel exercise);
   Future<int> updateExercise(ExerciseModel exercise);
   Future<int> deleteExercise(ObjectId id);
 }
@@ -73,7 +73,7 @@ class ExerciseRemoteDataSourceImpl implements ExerciseRemoteDataSource {
   }
 
   @override
-  Future<(ExerciseModel, int)> createExercise(ExerciseModel exercise) async {
+  Future<(ObjectId, int)> createExercise(ExerciseModel exercise) async {
     final response = await client.post(
       Uri.http(
         APIBaseURL,
@@ -87,10 +87,9 @@ class ExerciseRemoteDataSourceImpl implements ExerciseRemoteDataSource {
     );
     if (response.statusCode == 201) {
       final Map<String, dynamic> json = jsonDecode(response.body);
-      final Map<String, dynamic> exerciseJson = json['exercise'];
-      final ExerciseModel exercise = ExerciseModel.fromJson(exerciseJson);
+      final ObjectId exerciseId = ObjectId.fromHexString(json['exerciseId']);
       final int exercisesLastUpdate = json['exercisesLastUpdate'];
-      return (exercise, exercisesLastUpdate);
+      return (exerciseId, exercisesLastUpdate);
     } else {
       throw ServerException(response: response);
     }

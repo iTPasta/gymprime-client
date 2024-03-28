@@ -1,11 +1,11 @@
 import 'dart:convert';
 
+import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/features/shared/data/models/last_updates_model.dart';
 
 import 'package:http/http.dart' as http;
 
 import 'package:gymprime/core/constants/constants.dart';
-import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/core/utils/headers.dart';
 
 abstract class LastUpdatesRemoteDataSource {

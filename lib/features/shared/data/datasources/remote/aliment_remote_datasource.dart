@@ -1,17 +1,17 @@
 import 'dart:convert';
 
+import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:objectid/objectid.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:gymprime/core/constants/constants.dart';
-import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/core/utils/headers.dart';
 import 'package:gymprime/features/shared/data/models/aliment_model.dart';
 
 abstract class AlimentRemoteDataSource {
   Future<(List<AlimentModel>, int)> getAllAliments();
   Future<AlimentModel> getAliment(ObjectId id);
-  Future<(AlimentModel, int)> createAliment(AlimentModel aliment);
+  Future<(ObjectId, int)> createAliment(AlimentModel aliment);
   Future<int> updateAliment(AlimentModel aliment);
   Future<int> deleteAliment(ObjectId id);
 }
@@ -40,10 +40,8 @@ class AlimentRemoteDataSourceImpl implements AlimentRemoteDataSource {
     if (response.statusCode == 200) {
       final Map<String, dynamic> json = jsonDecode(response.body);
       final List<Map<String, dynamic>> alimentsJson = json['aliments'];
-      final List<AlimentModel> aliments = [];
-      for (Map<String, dynamic> alimentJson in alimentsJson) {
-        aliments.add(AlimentModel.fromJson(alimentJson));
-      }
+      final List<AlimentModel> aliments =
+          AlimentModel.fromJsonToList(alimentsJson);
       final int alimentsLastUpdate = json['alimentsLastUpdate'];
       return (aliments, alimentsLastUpdate);
     } else {
@@ -74,7 +72,7 @@ class AlimentRemoteDataSourceImpl implements AlimentRemoteDataSource {
   }
 
   @override
-  Future<(AlimentModel, int)> createAliment(AlimentModel aliment) async {
+  Future<(ObjectId, int)> createAliment(AlimentModel aliment) async {
     final response = await client.post(
       Uri.http(
         APIBaseURL,
@@ -88,10 +86,9 @@ class AlimentRemoteDataSourceImpl implements AlimentRemoteDataSource {
     );
     if (response.statusCode == 201) {
       final Map<String, dynamic> json = jsonDecode(response.body);
-      final Map<String, dynamic> alimentJson = json['aliment'];
-      final AlimentModel aliment = AlimentModel.fromJson(alimentJson);
+      final ObjectId alimentId = ObjectId.fromHexString(json['alimentId']);
       final int alimentsLastUpdate = json['alimentsLastUpdate'];
-      return (aliment, alimentsLastUpdate);
+      return (alimentId, alimentsLastUpdate);
     } else {
       throw ServerException(response: response);
     }

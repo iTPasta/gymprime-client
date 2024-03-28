@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:objectid/objectid.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:gymprime/core/constants/constants.dart';
-import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/core/utils/headers.dart';
 import 'package:gymprime/features/shared/data/models/meal_model.dart';
 
@@ -12,7 +12,7 @@ abstract class MealRemoteDataSource {
   Future<List<MealModel>> getAllMeals();
   Future<(List<MealModel>, int)> getMyMeals();
   Future<MealModel> getMeal(ObjectId id);
-  Future<(MealModel, int)> createMeal(MealModel meal);
+  Future<(ObjectId, int)> createMeal(MealModel meal);
   Future<int> updateMeal(MealModel meal);
   Future<int> deleteMeal(ObjectId id);
 }
@@ -100,7 +100,7 @@ class MealRemoteDataSourceImpl implements MealRemoteDataSource {
   }
 
   @override
-  Future<(MealModel, int)> createMeal(MealModel meal) async {
+  Future<(ObjectId, int)> createMeal(MealModel meal) async {
     final response = await client.post(
       Uri.http(
         APIBaseURL,
@@ -114,10 +114,9 @@ class MealRemoteDataSourceImpl implements MealRemoteDataSource {
     );
     if (response.statusCode == 201) {
       final Map<String, dynamic> json = jsonDecode(response.body);
-      final Map<String, dynamic> mealJson = json['meal'];
-      final MealModel meal = MealModel.fromJson(mealJson);
+      final ObjectId mealId = ObjectId.fromHexString('mealId');
       final int mealsLastUpdate = json['mealsLastUpdate'];
-      return (meal, mealsLastUpdate);
+      return (mealId, mealsLastUpdate);
     } else {
       throw ServerException(response: response);
     }

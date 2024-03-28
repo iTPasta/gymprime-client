@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:objectid/objectid.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:gymprime/core/constants/constants.dart';
-import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/core/utils/headers.dart';
 import 'package:gymprime/features/shared/data/models/diet_model.dart';
 
@@ -12,9 +12,14 @@ abstract class DietRemoteDataSource {
   Future<List<DietModel>> getAllDiets();
   Future<(List<DietModel>, int)> getMyDiets();
   Future<DietModel> getDiet(ObjectId id);
-  Future<(DietModel, int)> createDiet(DietModel diet);
-  Future<int> updateDiet(DietModel diet);
-  Future<int> deleteDiet(ObjectId id);
+  Future<(ObjectId, int, int)> createDiet(DietModel diet);
+  Future<(int, int)> updateDiet(DietModel diet);
+  Future<(int, int)> deleteDiet(ObjectId id);
+  Future<(List<DietModel>, int, String?)> synchronizeDiets({
+    required List<DietModel> createdDiets,
+    required List<DietModel> updatedDiets,
+    required List<ObjectId> deletedDiets,
+  });
 }
 
 class DietRemoteDataSourceImpl implements DietRemoteDataSource {
@@ -100,7 +105,7 @@ class DietRemoteDataSourceImpl implements DietRemoteDataSource {
   }
 
   @override
-  Future<(DietModel, int)> createDiet(DietModel diet) async {
+  Future<(ObjectId, int, int)> createDiet(DietModel diet) async {
     final response = await client.post(
       Uri.http(
         APIBaseURL,
@@ -114,17 +119,17 @@ class DietRemoteDataSourceImpl implements DietRemoteDataSource {
     );
     if (response.statusCode == 201) {
       final Map<String, dynamic> json = jsonDecode(response.body);
-      final Map<String, dynamic> dietJson = json['diet'];
-      final DietModel diet = DietModel.fromJson(dietJson);
+      final ObjectId dietId = ObjectId.fromHexString(json['dietId']);
+      final int oldDietsLastUpdate = json['oldDietsLastUpdate'];
       final int dietsLastUpdate = json['dietsLastUpdate'];
-      return (diet, dietsLastUpdate);
+      return (dietId, oldDietsLastUpdate, dietsLastUpdate);
     } else {
       throw ServerException(response: response);
     }
   }
 
   @override
-  Future<int> updateDiet(DietModel diet) async {
+  Future<(int, int)> updateDiet(DietModel diet) async {
     final response = await client.put(
       Uri.http(
         APIBaseURL,
@@ -138,15 +143,16 @@ class DietRemoteDataSourceImpl implements DietRemoteDataSource {
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> json = jsonDecode(response.body);
+      final int oldDietsLastUpdate = json['oldDietsLastUpdate'];
       final int dietsLastUpdate = json['dietsLastUpdate'];
-      return dietsLastUpdate;
+      return (oldDietsLastUpdate, dietsLastUpdate);
     } else {
       throw ServerException(response: response);
     }
   }
 
   @override
-  Future<int> deleteDiet(ObjectId id) async {
+  Future<(int, int)> deleteDiet(ObjectId id) async {
     final response = await client.delete(
       Uri.http(
         APIBaseURL,
@@ -156,8 +162,41 @@ class DietRemoteDataSourceImpl implements DietRemoteDataSource {
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> json = jsonDecode(response.body);
+      final int oldDietsLastUpdate = json['oldDietsLastUpdate'];
       final int dietsLastUpdate = json['dietsLastUpdate'];
-      return dietsLastUpdate;
+      return (oldDietsLastUpdate, dietsLastUpdate);
+    } else {
+      throw ServerException(response: response);
+    }
+  }
+
+  @override
+  Future<(List<DietModel>, int, String?)> synchronizeDiets({
+    required List<DietModel> createdDiets,
+    required List<DietModel> updatedDiets,
+    required List<ObjectId> deletedDiets,
+  }) async {
+    final response = await client.put(
+      Uri.http(
+        APIBaseURL,
+        '$routeName/sync',
+      ),
+      headers: generateHeaders(
+        contentType: ContentType.json,
+        authorization: true,
+      ),
+      body: jsonEncode({
+        'createdDiets': jsonEncode(createdDiets),
+        'updatedDiets': jsonEncode(updatedDiets),
+        'deletedDiets': jsonEncode(deletedDiets),
+      }),
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> json = jsonDecode(response.body);
+      final List<DietModel> diets = DietModel.fromJsonToList(json['diets']);
+      final int dietsLastUpdate = json['dietsLastUpdate'];
+      final String? warning = json['warning'];
+      return (diets, dietsLastUpdate, warning);
     } else {
       throw ServerException(response: response);
     }

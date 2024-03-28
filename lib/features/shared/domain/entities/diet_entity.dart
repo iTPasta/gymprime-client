@@ -31,3 +31,13 @@ class DietEntity {
     );
   }
 }
+
+extension DietEntityList on List<DietEntity> {
+  List<DietModel> toModelList() {
+    final List<DietModel> dietModels = [];
+    for (DietEntity dietEntity in this) {
+      dietModels.add(dietEntity.toModel());
+    }
+    return dietModels;
+  }
+}

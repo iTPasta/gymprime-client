@@ -1,3 +1,4 @@
+import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/features/shared/data/datasources/local/database/muscle_local_db.dart';
 import 'package:gymprime/features/shared/data/models/muscle_model.dart';
 import 'package:objectid/objectid.dart';
@@ -6,9 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class MuscleLocalDataSource {
   Future<List<MuscleModel>> getAllMuscles();
   Future<MuscleModel> getMuscle(ObjectId id);
-  Future<MuscleModel> createMuscle(MuscleModel muscle);
-  Future<MuscleModel> updateMuscle(ObjectId id, MuscleModel muscle);
-  Future<ObjectId> deleteMuscle(ObjectId id);
+  Future<void> createMuscle(MuscleModel muscle);
+  Future<void> updateMuscle(ObjectId id, MuscleModel muscle);
+  Future<void> deleteMuscle(ObjectId id);
   int? getMusclesLastUpdate();
   void setMusclesLastUpdate(int musclesLastUpdate);
 }
@@ -23,31 +24,48 @@ class MuscleLocalDataSourceImpl implements MuscleLocalDataSource {
   });
 
   @override
-  Future<MuscleModel> createMuscle(MuscleModel muscle) {
-    muscleLocalDB.insert(muscleModel: muscle);
-    return Future.value(muscle);
+  Future<List<MuscleModel>> getAllMuscles() async {
+    return await muscleLocalDB.fetchAll();
   }
 
   @override
-  Future<ObjectId> deleteMuscle(ObjectId id) {
-    muscleLocalDB.delete(id: id);
-    return Future.value(id);
+  Future<MuscleModel> getMuscle(ObjectId id) async {
+    final List<MuscleModel> muscles = await muscleLocalDB.fetchById(id);
+    if (muscles.isEmpty) {
+      throw NoRowAffectedException();
+    } else if (1 < muscles.length) {
+      throw MultipleRowsAffectedException();
+    } else {
+      return muscles.first;
+    }
   }
 
   @override
-  Future<MuscleModel> getMuscle(ObjectId id) {
-    return muscleLocalDB.fetchById(id: id);
+  Future<void> createMuscle(MuscleModel muscle) async {
+    final int id = await muscleLocalDB.insert(muscle);
+    if (id == 0) {
+      throw NoRowInsertedException();
+    }
   }
 
   @override
-  Future<List<MuscleModel>> getAllMuscles() {
-    return muscleLocalDB.fetchAll();
+  Future<void> updateMuscle(ObjectId? id, MuscleModel muscle) async {
+    final int rowsUpdated = await muscleLocalDB.update(id ?? muscle.id, muscle);
+    if (rowsUpdated == 0) {
+      throw NoRowAffectedException();
+    } else if (1 < rowsUpdated) {
+      throw MultipleRowsAffectedException();
+    }
   }
 
   @override
-  Future<MuscleModel> updateMuscle(ObjectId id, MuscleModel muscle) {
-    muscleLocalDB.update(id: id, muscleModel: muscle);
-    return Future.value(muscle);
+  Future<void> deleteMuscle(ObjectId id) async {
+    final int rowDeleted = await muscleLocalDB.delete(id);
+    if (rowDeleted == 0) {
+      throw NoRowAffectedException();
+    } else if (1 < rowDeleted) {
+      throw MultipleRowsAffectedException();
+    }
   }
 
   @override

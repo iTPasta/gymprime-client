@@ -1,3 +1,4 @@
+import 'package:gymprime/core/errors/exceptions.dart';
 import 'package:gymprime/features/shared/data/datasources/local/database/training_local_db.dart';
 import 'package:gymprime/features/shared/data/models/training_model.dart';
 import 'package:objectid/objectid.dart';
@@ -6,9 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class TrainingLocalDataSource {
   Future<List<TrainingModel>> getMyTrainings();
   Future<TrainingModel> getTraining(ObjectId id);
-  Future<TrainingModel> createTraining(TrainingModel training);
-  Future<TrainingModel> updateTraining(ObjectId id, TrainingModel training);
-  Future<ObjectId> deleteTraining(ObjectId id);
+  Future<void> createTraining(TrainingModel training);
+  Future<void> updateTraining(ObjectId id, TrainingModel training);
+  Future<void> deleteTraining(ObjectId id);
   int? getTrainingsLastUpdate();
   void setTrainingsLastUpdate(int trainingsLastUpdate);
 }
@@ -23,31 +24,49 @@ class TrainingLocalDataSourceImpl implements TrainingLocalDataSource {
   });
 
   @override
-  Future<TrainingModel> createTraining(TrainingModel training) {
-    trainingLocalDB.insert(trainingModel: training);
-    return Future.value(training);
+  Future<List<TrainingModel>> getMyTrainings() async {
+    return await trainingLocalDB.fetchAll();
   }
 
   @override
-  Future<ObjectId> deleteTraining(ObjectId id) {
-    trainingLocalDB.delete(id: id);
-    return Future.value(id);
+  Future<TrainingModel> getTraining(ObjectId id) async {
+    final List<TrainingModel> trainings = await trainingLocalDB.fetchById(id);
+    if (trainings.isEmpty) {
+      throw NoRowAffectedException();
+    } else if (1 < trainings.length) {
+      throw MultipleRowsAffectedException();
+    } else {
+      return trainings.first;
+    }
   }
 
   @override
-  Future<TrainingModel> getTraining(ObjectId id) {
-    return trainingLocalDB.fetchById(id: id);
+  Future<void> createTraining(TrainingModel training) async {
+    final int id = await trainingLocalDB.insert(training);
+    if (id == 0) {
+      throw NoRowInsertedException();
+    }
   }
 
   @override
-  Future<List<TrainingModel>> getMyTrainings() {
-    return trainingLocalDB.fetchAll();
+  Future<void> updateTraining(ObjectId? id, TrainingModel training) async {
+    final int rowsUpdated =
+        await trainingLocalDB.update(id ?? training.id, training);
+    if (rowsUpdated == 0) {
+      throw NoRowAffectedException();
+    } else if (1 < rowsUpdated) {
+      throw MultipleRowsAffectedException();
+    }
   }
 
   @override
-  Future<TrainingModel> updateTraining(ObjectId id, TrainingModel training) {
-    trainingLocalDB.update(id: id, trainingModel: training);
-    return Future.value(training);
+  Future<void> deleteTraining(ObjectId id) async {
+    final int rowDeleted = await trainingLocalDB.delete(id);
+    if (rowDeleted == 0) {
+      throw NoRowAffectedException();
+    } else if (1 < rowDeleted) {
+      throw MultipleRowsAffectedException();
+    }
   }
 
   @override

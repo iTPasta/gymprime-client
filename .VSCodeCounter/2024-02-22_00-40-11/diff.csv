@@ -1,8 +1,0 @@
-"filename", "language", "Dart", "comment", "blank", "total"
-"/home/kilian/gymprime-project/gymprime/lib/core/resources/headers.dart", "Dart", 25, 0, 8, 33
-"/home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/remote/api/aliment_remote_api.dart", "Dart", 103, 0, 12, 115
-"/home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/remote/api/diet_remote_api.dart", "Dart", 120, 0, 13, 133
-"/home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/remote/api/exercise_remote_api.dart", "Dart", 106, 0, 13, 119
-"/home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/remote/api/meal_remote_api.dart", "Dart", 120, 1, 14, 135
-"/home/kilian/gymprime-project/gymprime/lib/features/shared/data/datasources/remote/diet_remote_datasource.dart", "Dart", -128, 0, -9, -137
-"Total", "-", 346, 1, 51, 398

@@ -4,14 +4,14 @@ import 'package:objectid/objectid.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class MuscleLocalDB implements LocalDatabaseTable {
-  Future<int> insert({required MuscleModel muscleModel});
+  Future<int> insert(MuscleModel muscle);
   Future<List<MuscleModel>> fetchAll();
-  Future<MuscleModel> fetchById({required ObjectId id});
-  Future<int> update({
-    required ObjectId id,
-    required MuscleModel muscleModel,
-  });
-  Future<int> delete({required ObjectId id});
+  Future<List<MuscleModel>> fetchById(ObjectId id);
+  Future<int> update(
+    ObjectId id,
+    MuscleModel muscle,
+  );
+  Future<int> delete(ObjectId id);
 }
 
 class MuscleLocalDBImpl implements MuscleLocalDB {
@@ -39,37 +39,35 @@ class MuscleLocalDBImpl implements MuscleLocalDB {
   }
 
   @override
-  Future<int> insert({required MuscleModel muscleModel}) async {
-    return await database.insert(tableName, muscleModel.toJson());
+  Future<int> insert(MuscleModel muscle) async {
+    return await database.insert(tableName, muscle.toJson());
   }
 
   @override
   Future<List<MuscleModel>> fetchAll() async {
-    final muscleModels = await database.query(tableName);
-    return muscleModels
-        .map((modelMap) => MuscleModel.fromJson(modelMap))
-        .toList();
+    final musclesMaps = await database.query(tableName);
+    return MuscleModel.fromJsonToList(musclesMaps);
   }
 
   @override
-  Future<MuscleModel> fetchById({required ObjectId id}) async {
-    final muscleModel = await database.rawQuery(
+  Future<List<MuscleModel>> fetchById(ObjectId id) async {
+    final musclesMaps = await database.rawQuery(
       '''
         SELECT * FROM $tableName WHERE id = ? ;
       ''',
       [id],
     );
-    return MuscleModel.fromJson(muscleModel.first);
+    return MuscleModel.fromJsonToList(musclesMaps);
   }
 
   @override
-  Future<int> update({
-    required ObjectId id,
-    required MuscleModel muscleModel,
-  }) async {
+  Future<int> update(
+    ObjectId id,
+    MuscleModel muscle,
+  ) async {
     return await database.update(
       tableName,
-      muscleModel.toJson(),
+      muscle.toJson(),
       where: 'id = ?',
       conflictAlgorithm: ConflictAlgorithm.rollback,
       whereArgs: [id],
@@ -77,7 +75,7 @@ class MuscleLocalDBImpl implements MuscleLocalDB {
   }
 
   @override
-  Future<int> delete({required ObjectId id}) async {
+  Future<int> delete(ObjectId id) async {
     return await database.delete(
       tableName,
       where: 'id = ?',

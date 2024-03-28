@@ -4,14 +4,15 @@ import 'package:objectid/objectid.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class DietLocalDB implements LocalDatabaseTable {
-  Future<int> insert({required DietModel dietModel});
+  Future<int> insert(DietModel diet);
   Future<List<DietModel>> fetchAll();
-  Future<DietModel> fetchById({required ObjectId id});
-  Future<int> update({
-    required ObjectId id,
-    required DietModel dietModel,
-  });
-  Future<int> delete({required ObjectId id});
+  Future<List<DietModel>> fetchById(ObjectId id);
+  Future<int> update(
+    ObjectId id,
+    DietModel diet,
+  );
+  Future<int> delete(ObjectId id);
+  Future<int> erase();
 }
 
 class DietLocalDBImpl implements DietLocalDB {
@@ -38,35 +39,35 @@ class DietLocalDBImpl implements DietLocalDB {
   }
 
   @override
-  Future<int> insert({required DietModel dietModel}) async {
-    return await database.insert(tableName, dietModel.toJson());
+  Future<int> insert(DietModel diet) async {
+    return await database.insert(tableName, diet.toJson());
   }
 
   @override
   Future<List<DietModel>> fetchAll() async {
-    final dietModels = await database.query(tableName);
-    return dietModels.map((modelMap) => DietModel.fromJson(modelMap)).toList();
+    final dietsMaps = await database.query(tableName);
+    return DietModel.fromJsonToList(dietsMaps);
   }
 
   @override
-  Future<DietModel> fetchById({required ObjectId id}) async {
-    final dietModel = await database.rawQuery(
+  Future<List<DietModel>> fetchById(ObjectId id) async {
+    final dietsMaps = await database.rawQuery(
       '''
         SELECT * FROM $tableName WHERE id = ? ;
       ''',
       [id],
     );
-    return DietModel.fromJson(dietModel.first);
+    return DietModel.fromJsonToList(dietsMaps);
   }
 
   @override
-  Future<int> update({
-    required ObjectId id,
-    required DietModel dietModel,
-  }) async {
+  Future<int> update(
+    ObjectId id,
+    DietModel diet,
+  ) async {
     return await database.update(
       tableName,
-      dietModel.toJson(),
+      diet.toJson(),
       where: 'id = ?',
       conflictAlgorithm: ConflictAlgorithm.rollback,
       whereArgs: [id],
@@ -74,11 +75,19 @@ class DietLocalDBImpl implements DietLocalDB {
   }
 
   @override
-  Future<int> delete({required ObjectId id}) async {
+  Future<int> delete(ObjectId id) async {
     return await database.delete(
       tableName,
       where: 'id = ?',
       whereArgs: [id.toString()],
+    );
+  }
+
+  @override
+  Future<int> erase() async {
+    return await database.delete(
+      tableName,
+      where: null,
     );
   }
 }

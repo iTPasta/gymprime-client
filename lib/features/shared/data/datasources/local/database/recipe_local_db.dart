@@ -4,14 +4,14 @@ import 'package:objectid/objectid.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class RecipeLocalDB implements LocalDatabaseTable {
-  Future<int> insert({required RecipeModel recipeModel});
+  Future<int> insert(RecipeModel recipe);
   Future<List<RecipeModel>> fetchAll();
-  Future<RecipeModel> fetchById({required ObjectId id});
-  Future<int> update({
-    required ObjectId id,
-    required RecipeModel recipeModel,
-  });
-  Future<int> delete({required ObjectId id});
+  Future<List<RecipeModel>> fetchById(ObjectId id);
+  Future<int> update(
+    ObjectId id,
+    RecipeModel recipe,
+  );
+  Future<int> delete(ObjectId id);
 }
 
 class RecipeLocalDBImpl implements RecipeLocalDB {
@@ -37,37 +37,35 @@ class RecipeLocalDBImpl implements RecipeLocalDB {
   }
 
   @override
-  Future<int> insert({required RecipeModel recipeModel}) async {
-    return await database.insert(tableName, recipeModel.toJson());
+  Future<int> insert(RecipeModel recipe) async {
+    return await database.insert(tableName, recipe.toJson());
   }
 
   @override
   Future<List<RecipeModel>> fetchAll() async {
-    final recipeModels = await database.query(tableName);
-    return recipeModels
-        .map((modelMap) => RecipeModel.fromJson(modelMap))
-        .toList();
+    final recipesMaps = await database.query(tableName);
+    return RecipeModel.fromJsonToList(recipesMaps);
   }
 
   @override
-  Future<RecipeModel> fetchById({required ObjectId id}) async {
-    final recipeModel = await database.rawQuery(
+  Future<List<RecipeModel>> fetchById(ObjectId id) async {
+    final recipesMaps = await database.rawQuery(
       '''
         SELECT * FROM $tableName WHERE id = ? ;
       ''',
       [id],
     );
-    return RecipeModel.fromJson(recipeModel.first);
+    return RecipeModel.fromJsonToList(recipesMaps);
   }
 
   @override
-  Future<int> update({
-    required ObjectId id,
-    required RecipeModel recipeModel,
-  }) async {
+  Future<int> update(
+    ObjectId id,
+    RecipeModel recipe,
+  ) async {
     return await database.update(
       tableName,
-      recipeModel.toJson(),
+      recipe.toJson(),
       where: 'id = ?',
       conflictAlgorithm: ConflictAlgorithm.rollback,
       whereArgs: [id],
@@ -75,7 +73,7 @@ class RecipeLocalDBImpl implements RecipeLocalDB {
   }
 
   @override
-  Future<int> delete({required ObjectId id}) async {
+  Future<int> delete(ObjectId id) async {
     return await database.delete(
       tableName,
       where: 'id = ?',

@@ -4,14 +4,14 @@ import 'package:objectid/objectid.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class MealLocalDB implements LocalDatabaseTable {
-  Future<int> insert({required MealModel mealModel});
+  Future<int> insert(MealModel meal);
   Future<List<MealModel>> fetchAll();
-  Future<MealModel> fetchById({required ObjectId id});
-  Future<int> update({
-    required ObjectId id,
-    required MealModel mealModel,
-  });
-  Future<int> delete({required ObjectId id});
+  Future<List<MealModel>> fetchById(ObjectId id);
+  Future<int> update(
+    ObjectId id,
+    MealModel meal,
+  );
+  Future<int> delete(ObjectId id);
 }
 
 class MealLocalDBImpl implements MealLocalDB {
@@ -39,35 +39,35 @@ class MealLocalDBImpl implements MealLocalDB {
   }
 
   @override
-  Future<int> insert({required MealModel mealModel}) async {
-    return await database.insert(tableName, mealModel.toJson());
+  Future<int> insert(MealModel meal) async {
+    return await database.insert(tableName, meal.toJson());
   }
 
   @override
   Future<List<MealModel>> fetchAll() async {
-    final mealModels = await database.query(tableName);
-    return mealModels.map((modelMap) => MealModel.fromJson(modelMap)).toList();
+    final mealMaps = await database.query(tableName);
+    return MealModel.fromJsonToList(mealMaps);
   }
 
   @override
-  Future<MealModel> fetchById({required ObjectId id}) async {
-    final mealModel = await database.rawQuery(
+  Future<List<MealModel>> fetchById(ObjectId id) async {
+    final mealsMaps = await database.rawQuery(
       '''
         SELECT * FROM $tableName WHERE id = ? ;
       ''',
       [id],
     );
-    return MealModel.fromJson(mealModel.first);
+    return MealModel.fromJsonToList(mealsMaps);
   }
 
   @override
-  Future<int> update({
-    required ObjectId id,
-    required MealModel mealModel,
-  }) async {
+  Future<int> update(
+    ObjectId id,
+    MealModel meal,
+  ) async {
     return await database.update(
       tableName,
-      mealModel.toJson(),
+      meal.toJson(),
       where: 'id = ?',
       conflictAlgorithm: ConflictAlgorithm.rollback,
       whereArgs: [id],
@@ -75,7 +75,7 @@ class MealLocalDBImpl implements MealLocalDB {
   }
 
   @override
-  Future<int> delete({required ObjectId id}) async {
+  Future<int> delete(ObjectId id) async {
     return await database.delete(
       tableName,
       where: 'id = ?',

@@ -1,24 +1,24 @@
 import 'package:gymprime/core/resources/local_database.dart';
-import 'package:gymprime/features/shared/data/models/training_model.dart';
+import 'package:gymprime/features/shared/data/models/action_model.dart';
 import 'package:objectid/objectid.dart';
 import 'package:sqflite/sqflite.dart';
 
-abstract class TrainingLocalDB implements LocalDatabaseTable {
-  Future<int> insert(TrainingModel training);
-  Future<List<TrainingModel>> fetchAll();
-  Future<List<TrainingModel>> fetchById(ObjectId id);
+abstract class ActionLocalDB implements LocalDatabaseTable {
+  Future<int> insert(ActionModel action);
+  Future<List<ActionModel>> fetchAll();
+  Future<List<ActionModel>> fetchById(ObjectId id);
   Future<int> update(
     ObjectId id,
-    TrainingModel training,
+    ActionModel action,
   );
   Future<int> delete(ObjectId id);
 }
 
-class TrainingLocalDBImpl implements TrainingLocalDB {
+class ActionLocalDBImpl implements ActionLocalDB {
   late final Database database;
   final String tableName;
 
-  TrainingLocalDBImpl({
+  ActionLocalDBImpl({
     required this.tableName,
   });
 
@@ -29,44 +29,48 @@ class TrainingLocalDBImpl implements TrainingLocalDB {
       '''
         CREATE TABLE IF NOT EXISTS $tableName (
           id  TEXT PRIMARY KEY NOT NULL,
-          name TEXT,
-          notes TEXT,
-          sets TEXT NOT NULL
+          actionType  TEXT NOT NULL,
+          modelType TEXT NOT NULL,
+          objectId  TEXT NOT NULL,
+          date INT NOT NULL
         );
       ''',
     );
   }
 
   @override
-  Future<int> insert(TrainingModel training) async {
-    return await database.insert(tableName, training.toJson());
+  Future<int> insert(ActionModel action) async {
+    return await database.insert(tableName, action.toJson());
   }
 
   @override
-  Future<List<TrainingModel>> fetchAll() async {
-    final trainingsMaps = await database.query(tableName);
-    return TrainingModel.fromJsonToList(trainingsMaps);
+  Future<List<ActionModel>> fetchAll() async {
+    final cachedActionsMaps = await database.query(
+      tableName,
+      orderBy: "date ASC",
+    );
+    return ActionModel.fromJsonToList(cachedActionsMaps);
   }
 
   @override
-  Future<List<TrainingModel>> fetchById(ObjectId id) async {
-    final trainingsMaps = await database.rawQuery(
+  Future<List<ActionModel>> fetchById(ObjectId id) async {
+    final cachedActionsMaps = await database.rawQuery(
       '''
         SELECT * FROM $tableName WHERE id = ? ;
       ''',
       [id],
     );
-    return TrainingModel.fromJsonToList(trainingsMaps);
+    return ActionModel.fromJsonToList(cachedActionsMaps);
   }
 
   @override
   Future<int> update(
     ObjectId id,
-    TrainingModel training,
+    ActionModel action,
   ) async {
     return await database.update(
       tableName,
-      training.toJson(),
+      action.toJson(),
       where: 'id = ?',
       conflictAlgorithm: ConflictAlgorithm.rollback,
       whereArgs: [id],

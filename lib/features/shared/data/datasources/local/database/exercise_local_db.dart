@@ -4,14 +4,14 @@ import 'package:objectid/objectid.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class ExerciseLocalDB implements LocalDatabaseTable {
-  Future<int> insert({required ExerciseModel exerciseModel});
+  Future<int> insert(ExerciseModel exercise);
   Future<List<ExerciseModel>> fetchAll();
-  Future<ExerciseModel> fetchById({required ObjectId id});
-  Future<int> update({
-    required ObjectId id,
-    required ExerciseModel exerciseModel,
-  });
-  Future<int> delete({required ObjectId id});
+  Future<List<ExerciseModel>> fetchById(ObjectId id);
+  Future<int> update(
+    ObjectId id,
+    ExerciseModel exercise,
+  );
+  Future<int> delete(ObjectId id);
 }
 
 class ExerciseLocalDBImpl implements ExerciseLocalDB {
@@ -39,37 +39,35 @@ class ExerciseLocalDBImpl implements ExerciseLocalDB {
   }
 
   @override
-  Future<int> insert({required ExerciseModel exerciseModel}) async {
-    return await database.insert(tableName, exerciseModel.toJson());
+  Future<int> insert(ExerciseModel exercise) async {
+    return await database.insert(tableName, exercise.toJson());
   }
 
   @override
   Future<List<ExerciseModel>> fetchAll() async {
-    final exerciseModels = await database.query(tableName);
-    return exerciseModels
-        .map((modelMap) => ExerciseModel.fromJson(modelMap))
-        .toList();
+    final exercisesMaps = await database.query(tableName);
+    return ExerciseModel.fromJsonToList(exercisesMaps);
   }
 
   @override
-  Future<ExerciseModel> fetchById({required ObjectId id}) async {
-    final exerciseModel = await database.rawQuery(
+  Future<List<ExerciseModel>> fetchById(ObjectId id) async {
+    final exercisesMaps = await database.rawQuery(
       '''
         SELECT * FROM $tableName WHERE id = ? ;
       ''',
       [id],
     );
-    return ExerciseModel.fromJson(exerciseModel.first);
+    return ExerciseModel.fromJsonToList(exercisesMaps);
   }
 
   @override
-  Future<int> update({
-    required ObjectId id,
-    required ExerciseModel exerciseModel,
-  }) async {
+  Future<int> update(
+    ObjectId id,
+    ExerciseModel exercise,
+  ) async {
     return await database.update(
       tableName,
-      exerciseModel.toJson(),
+      exercise.toJson(),
       where: 'id = ?',
       conflictAlgorithm: ConflictAlgorithm.rollback,
       whereArgs: [id],
@@ -77,7 +75,7 @@ class ExerciseLocalDBImpl implements ExerciseLocalDB {
   }
 
   @override
-  Future<int> delete({required ObjectId id}) async {
+  Future<int> delete(ObjectId id) async {
     return await database.delete(
       tableName,
       where: 'id = ?',

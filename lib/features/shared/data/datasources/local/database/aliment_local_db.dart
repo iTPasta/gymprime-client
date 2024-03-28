@@ -4,14 +4,11 @@ import 'package:objectid/objectid.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class AlimentLocalDB implements LocalDatabaseTable {
-  Future<int> insert({required AlimentModel alimentModel});
+  Future<int> insert(AlimentModel aliment);
   Future<List<AlimentModel>> fetchAll();
-  Future<AlimentModel> fetchById({required ObjectId id});
-  Future<int> update({
-    required ObjectId id,
-    required AlimentModel alimentModel,
-  });
-  Future<int> delete({required ObjectId id});
+  Future<List<AlimentModel>> fetchById(ObjectId id);
+  Future<int> update(ObjectId id, AlimentModel aliment);
+  Future<int> delete(ObjectId id);
 }
 
 class AlimentLocalDBImpl implements AlimentLocalDB {
@@ -46,37 +43,35 @@ class AlimentLocalDBImpl implements AlimentLocalDB {
   }
 
   @override
-  Future<int> insert({required AlimentModel alimentModel}) async {
-    return await database.insert(tableName, alimentModel.toJson());
+  Future<int> insert(AlimentModel aliment) async {
+    return await database.insert(tableName, aliment.toJson());
   }
 
   @override
   Future<List<AlimentModel>> fetchAll() async {
-    final alimentModels = await database.query(tableName);
-    return alimentModels
-        .map((modelMap) => AlimentModel.fromJson(modelMap))
-        .toList();
+    final alimentsMaps = await database.query(tableName);
+    return AlimentModel.fromJsonToList(alimentsMaps);
   }
 
   @override
-  Future<AlimentModel> fetchById({required ObjectId id}) async {
-    final alimentModel = await database.rawQuery(
+  Future<List<AlimentModel>> fetchById(ObjectId id) async {
+    final alimentsMaps = await database.rawQuery(
       '''
         SELECT * FROM $tableName WHERE id = ? ;
       ''',
       [id],
     );
-    return AlimentModel.fromJson(alimentModel.first);
+    return AlimentModel.fromJsonToList(alimentsMaps);
   }
 
   @override
-  Future<int> update({
-    required ObjectId id,
-    required AlimentModel alimentModel,
-  }) async {
+  Future<int> update(
+    ObjectId id,
+    AlimentModel aliment,
+  ) async {
     return await database.update(
       tableName,
-      alimentModel.toJson(),
+      aliment.toJson(),
       where: 'id = ?',
       conflictAlgorithm: ConflictAlgorithm.rollback,
       whereArgs: [id],
@@ -84,7 +79,7 @@ class AlimentLocalDBImpl implements AlimentLocalDB {
   }
 
   @override
-  Future<int> delete({required ObjectId id}) async {
+  Future<int> delete(ObjectId id) async {
     return await database.delete(
       tableName,
       where: 'id = ?',

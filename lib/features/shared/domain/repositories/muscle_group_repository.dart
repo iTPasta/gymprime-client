@@ -6,9 +6,9 @@ abstract class MuscleGroupRepository {
   Future<DataState<List<MuscleGroupEntity>>> getAllMuscleGroups();
   Future<DataState<MuscleGroupEntity>> getMuscleGroup(ObjectId id);
   Future<DataState<MuscleGroupEntity>> createMuscleGroup(
-      MuscleGroupEntity muscleGroupEntity);
+      MuscleGroupEntity muscleGroup);
   Future<DataState<MuscleGroupEntity>> updateMuscleGroup(
-      MuscleGroupEntity muscleGroupEntity);
+      MuscleGroupEntity muscleGroup);
   Future<DataState<ObjectId>> deleteMuscleGroup(ObjectId id);
-  Future<DataState<void>> syncMuscleGroups();
+  Future<DataState<void>> synchronizeMuscleGroups();
 }

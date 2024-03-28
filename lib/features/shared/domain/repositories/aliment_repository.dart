@@ -5,8 +5,8 @@ import 'package:objectid/objectid.dart';
 abstract class AlimentRepository {
   Future<DataState<List<AlimentEntity>>> getAllAliments();
   Future<DataState<AlimentEntity>> getAliment(ObjectId id);
-  Future<DataState<AlimentEntity>> createAliment(AlimentEntity diet);
-  Future<DataState<AlimentEntity>> updateAliment(AlimentEntity diet);
+  Future<DataState<AlimentEntity>> createAliment(AlimentEntity aliment);
+  Future<DataState<AlimentEntity>> updateAliment(AlimentEntity aliment);
   Future<DataState<ObjectId>> deleteAliment(ObjectId id);
-  Future<DataState<void>> syncMyAliments();
+  Future<DataState<void>> synchronizeAliments();
 }

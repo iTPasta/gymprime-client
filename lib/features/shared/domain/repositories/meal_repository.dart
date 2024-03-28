@@ -6,8 +6,8 @@ abstract class MealRepository {
   Future<DataState<List<MealEntity>>> getAllMeals();
   Future<DataState<List<MealEntity>>> getMyMeals();
   Future<DataState<MealEntity>> getMeal(ObjectId id);
-  Future<DataState<MealEntity>> createMeal(MealEntity mealEntity);
-  Future<DataState<MealEntity>> updateMeal(MealEntity mealEntity);
+  Future<DataState<MealEntity>> createMeal(MealEntity meal);
+  Future<DataState<MealEntity>> updateMeal(MealEntity meal);
   Future<DataState<ObjectId>> deleteMeal(ObjectId id);
-  Future<DataState<void>> syncMyMeals();
+  Future<DataState<void>> synchronizeMeals();
 }

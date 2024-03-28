@@ -6,8 +6,8 @@ abstract class RecipeRepository {
   Future<DataState<List<RecipeEntity>>> getAllRecipes();
   Future<DataState<List<RecipeEntity>>> getMyRecipes();
   Future<DataState<RecipeEntity>> getRecipe(ObjectId id);
-  Future<DataState<RecipeEntity>> createRecipe(RecipeEntity recipeEntity);
-  Future<DataState<RecipeEntity>> updateRecipe(RecipeEntity recipeEntity);
+  Future<DataState<RecipeEntity>> createRecipe(RecipeEntity recipe);
+  Future<DataState<RecipeEntity>> updateRecipe(RecipeEntity recipe);
   Future<DataState<ObjectId>> deleteRecipe(ObjectId id);
-  Future<DataState<void>> syncMyRecipes();
+  Future<DataState<void>> synchronizeRecipes();
 }

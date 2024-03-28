@@ -6,10 +6,8 @@ abstract class TrainingRepository {
   Future<DataState<List<TrainingEntity>>> getAllTrainings();
   Future<DataState<List<TrainingEntity>>> getMyTrainings();
   Future<DataState<TrainingEntity>> getTraining(ObjectId id);
-  Future<DataState<TrainingEntity>> createTraining(
-      TrainingEntity trainingEntity);
-  Future<DataState<TrainingEntity>> updateTraining(
-      TrainingEntity trainingEntity);
+  Future<DataState<TrainingEntity>> createTraining(TrainingEntity training);
+  Future<DataState<TrainingEntity>> updateTraining(TrainingEntity training);
   Future<DataState<ObjectId>> deleteTraining(ObjectId id);
-  Future<DataState<void>> syncMyTrainings();
+  Future<DataState<void>> synchronizeTrainings();
 }
